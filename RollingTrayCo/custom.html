@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bespoke Orders - The Rolling Tray Co</title>
+    <meta name="description" content="Design your own custom, one-of-a-kind hardwood rolling tray. Use our interactive tool to create your bespoke design.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #design-canvas {
+            background-color: #1c1c1c;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 1rem;
+        }
+        #design-canvas.draw-mode { cursor: crosshair; }
+        #design-canvas.select-mode { cursor: grab; }
+        #design-canvas.select-mode:active { cursor: grabbing; }
+
+        .draggable:hover {
+            outline: 2px dashed #a78bfa;
+            cursor: move;
+        }
+        .draggable.selected {
+            outline: 2px solid #a78bfa;
+        }
+        .tool-btn.active {
+            background-color: #8b5cf6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 transition-all duration-300 backdrop-blur-lg bg-black/30">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <span class="text-xl font-bold tracking-wider">The Rolling Tray Co</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html#shop" class="hover:text-violet-400 transition-colors">Collection</a>
+                <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+                <a href="custom.html" class="text-violet-400 transition-colors font-bold">Bespoke Orders</a>
+            </nav>
+            <a href="index.html#cart-button" id="cart-button" class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <!-- Page Header -->
+        <section class="text-center mb-12">
+            <h1 class="text-5xl md:text-7xl font-black uppercase">
+                <span class="gradient-text">Bespoke Design Studio</span>
+            </h1>
+            <p class="mt-4 max-w-3xl mx-auto text-neutral-400 md:text-lg">
+                Your vision, our hands. Use the tools below to create a one-of-a-kind design. Once you're happy, download the SVG file and email it to us with your order inquiry.
+            </p>
+        </section>
+
+        <!-- Designer -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Controls -->
+            <div class="lg:col-span-1 bg-[#111] p-6 rounded-xl space-y-6 self-start">
+                <h2 class="text-2xl font-bold border-b border-neutral-800 pb-4">Controls</h2>
+                
+                <!-- Drawing Tools -->
+                <div>
+                    <label class="block font-medium mb-2">Drawing Tools</label>
+                    <div id="tool-palette" class="grid grid-cols-3 gap-2">
+                        <button class="tool-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700 active" data-tool="select">Select</button>
+                        <button class="tool-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700" data-tool="line">Line</button>
+                        <button class="tool-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700" data-tool="circle">Circle</button>
+                    </div>
+                </div>
+
+                <!-- Add Compartments -->
+                <div>
+                    <label class="block font-medium mb-2">Add Compartments</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="compartment-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700 text-sm" data-type="kingskin">Kingskin</button>
+                        <button class="compartment-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700 text-sm" data-type="roach">Roach</button>
+                        <button class="compartment-btn bg-neutral-800 p-2 rounded-md hover:bg-neutral-700 col-span-2" data-type="rolling-v">Rolling V</button>
+                    </div>
+                </div>
+
+                <!-- Text Tool -->
+                <div>
+                    <label for="text-input" class="block font-medium mb-2">Add Text</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="text-input" placeholder="Your Text Here" class="w-full bg-neutral-800 border-neutral-700 rounded-md px-3 py-2 focus:ring-violet-500 focus:border-violet-500">
+                        <button id="add-text-btn" class="bg-violet-600 hover:bg-violet-700 text-white font-bold px-4 rounded-md">Add</button>
+                    </div>
+                </div>
+
+                <!-- Image Upload -->
+                <div>
+                    <label for="image-upload" class="block font-medium mb-2">Upload Logo/Icon</label>
+                    <p class="text-xs text-neutral-500 mb-2">For best results, use a simple SVG or PNG.</p>
+                    <input type="file" id="image-upload" accept="image/svg+xml, image/png" class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700">
+                </div>
+
+                 <!-- Element Controls -->
+                <div id="element-controls" class="hidden space-y-4 pt-4 border-t border-neutral-800">
+                    <h3 class="text-lg font-bold">Selected Element</h3>
+                     <div id="font-size-control">
+                        <label for="font-size" class="block font-medium mb-2">Font Size</label>
+                        <input type="range" id="font-size" min="10" max="100" value="30" class="w-full">
+                    </div>
+                    <button id="delete-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-md">Delete Element</button>
+                </div>
+
+                <!-- General Controls -->
+                <div class="pt-4 border-t border-neutral-800">
+                     <button id="reset-btn" class="w-full bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 rounded-md">Reset Design</button>
+                </div>
+
+
+            </div>
+
+            <!-- Canvas -->
+            <div class="lg:col-span-2">
+                <svg id="design-canvas" class="select-mode" width="100%" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+                    <!-- Tray Outline -->
+                    <rect x="5" y="5" width="790" height="490" rx="30" fill="none" stroke="#6d28d9" stroke-width="3" stroke-dasharray="10 5" pointer-events="none"/>
+                    <text id="placeholder-text" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#444" font-size="20" pointer-events="none">Your design area</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Download & Instructions -->
+        <section class="mt-12 text-center">
+             <button id="download-svg-btn" class="bg-green-600 text-white font-bold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:bg-green-700">
+                Download Your Design (.svg)
+            </button>
+            <div class="mt-8 max-w-3xl mx-auto text-neutral-400 text-left bg-[#111] p-6 rounded-xl">
+                 <h3 class="text-xl font-bold text-white mb-4">Next Steps</h3>
+                 <ol class="list-decimal list-inside space-y-2">
+                     <li>Click the 'Download' button to save your unique design file.</li>
+                     <li>Compose a new email to <a href="mailto:orders@therollingtrayco.com?subject=Bespoke%20Design%20Inquiry" class="text-violet-400 underline">orders@therollingtrayco.com</a>.</li>
+                     <li>Attach the downloaded <strong>.svg</strong> file to the email.</li>
+                     <li>In the email body, please specify your desired wood type and any other details. We will reply within 2 business days with a quote and timeline.</li>
+                 </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-neutral-900 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const svgCanvas = document.getElementById('design-canvas');
+        const textInput = document.getElementById('text-input');
+        const addTextBtn = document.getElementById('add-text-btn');
+        const imageUpload = document.getElementById('image-upload');
+        const downloadBtn = document.getElementById('download-svg-btn');
+        const controls = document.getElementById('element-controls');
+        const fontSizeControl = document.getElementById('font-size-control');
+        const fontSizeSlider = document.getElementById('font-size');
+        const deleteBtn = document.getElementById('delete-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const toolPalette = document.getElementById('tool-palette');
+        const placeholderText = document.getElementById('placeholder-text');
+
+        let selectedElement = null;
+        let currentMode = 'select'; // select, line, circle
+        let isDrawing = false;
+        let startPos = { x: 0, y: 0 };
+        let currentDrawingElement = null;
+        
+        // --- Draggable Logic ---
+        let dragOffset = { x: 0, y: 0 };
+        let dragStartPos = { x1: 0, y1: 0, x2: 0, y2: 0 };
+
+        function makeDraggable(element) {
+            element.classList.add('draggable');
+            element.addEventListener('mousedown', (e) => {
+                if (currentMode !== 'select') return;
+                e.stopPropagation();
+                selectElement(element);
+                const pt = getMousePosition(e);
+                
+                if (element.tagName === 'circle') {
+                    dragOffset.x = pt.x - parseFloat(element.getAttribute('cx'));
+                    dragOffset.y = pt.y - parseFloat(element.getAttribute('cy'));
+                } else if (element.tagName === 'line') {
+                    dragOffset.x = pt.x;
+                    dragOffset.y = pt.y;
+                    dragStartPos.x1 = parseFloat(element.getAttribute('x1'));
+                    dragStartPos.y1 = parseFloat(element.getAttribute('y1'));
+                    dragStartPos.x2 = parseFloat(element.getAttribute('x2'));
+                    dragStartPos.y2 = parseFloat(element.getAttribute('y2'));
+                } else { // text, image, rect
+                    dragOffset.x = pt.x - parseFloat(element.getAttribute('x'));
+                    dragOffset.y = pt.y - parseFloat(element.getAttribute('y'));
+                }
+            });
+        }
+
+        function handleDrag(e) {
+            if (!selectedElement || currentMode !== 'select' || !e.buttons) return;
+            e.preventDefault();
+            const pt = getMousePosition(e);
+            const newX = pt.x - dragOffset.x;
+            const newY = pt.y - dragOffset.y;
+
+            if (selectedElement.tagName === 'circle') {
+                selectedElement.setAttribute('cx', newX);
+                selectedElement.setAttribute('cy', newY);
+            } else if (selectedElement.tagName === 'line') {
+                const dx = pt.x - dragOffset.x;
+                const dy = pt.y - dragOffset.y;
+                selectedElement.setAttribute('x1', dragStartPos.x1 + dx);
+                selectedElement.setAttribute('y1', dragStartPos.y1 + dy);
+                selectedElement.setAttribute('x2', dragStartPos.x2 + dx);
+                selectedElement.setAttribute('y2', dragStartPos.y2 + dy);
+            } else {
+                selectedElement.setAttribute('x', newX);
+                selectedElement.setAttribute('y', newY);
+            }
+        }
+        
+        // --- Selection & Controls ---
+        function selectElement(element) {
+             if (selectedElement) { selectedElement.classList.remove('selected'); }
+            selectedElement = element;
+            selectedElement.classList.add('selected');
+            
+            controls.classList.remove('hidden');
+            if (selectedElement.tagName === 'text') {
+                fontSizeControl.style.display = 'block';
+                fontSizeSlider.value = parseFloat(selectedElement.getAttribute('font-size'));
+            } else {
+                 fontSizeControl.style.display = 'none';
+            }
+        }
+        
+        function deselectElement() {
+            if (selectedElement) { selectedElement.classList.remove('selected'); }
+            selectedElement = null;
+            controls.classList.add('hidden');
+        }
+
+        // --- Tool Palette ---
+        toolPalette.addEventListener('click', (e) => {
+            if (e.target.matches('.tool-btn')) {
+                currentMode = e.target.dataset.tool;
+                document.querySelector('.tool-btn.active').classList.remove('active');
+                e.target.classList.add('active');
+                svgCanvas.className = `${currentMode}-mode`;
+                deselectElement();
+            }
+        });
+        
+        // --- Compartment Buttons ---
+        document.querySelectorAll('.compartment-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                let width, height, rx;
+                switch (btn.dataset.type) {
+                    case 'kingskin': width = 110; height = 28; rx = 4; break;
+                    case 'roach': width = 55; height = 20; rx = 4; break;
+                    case 'rolling-v': width = 200; height = 30; rx = 15; break; // Pill shape
+                }
+                const newRect = createSVGElement('rect', {
+                    x: 400 - width/2, y: 250 - height/2, width, height, rx,
+                    fill: 'rgba(255,255,255,0.1)', stroke: '#e5e5e5', 'stroke-width': 1
+                });
+                svgCanvas.appendChild(newRect);
+                makeDraggable(newRect);
+                placeholderText.style.display = 'none';
+            });
+        });
+
+        // --- Drawing Logic ---
+        function getMousePosition(evt) {
+            const CTM = svgCanvas.getScreenCTM();
+            return {
+                x: (evt.clientX - CTM.e) / CTM.a,
+                y: (evt.clientY - CTM.f) / CTM.d
+            };
+        }
+        
+        svgCanvas.addEventListener('mousedown', (e) => {
+            startPos = getMousePosition(e);
+            if (currentMode === 'select') {
+                if (e.target === svgCanvas) deselectElement();
+            } else {
+                isDrawing = true;
+                if (currentMode === 'line') {
+                    currentDrawingElement = createSVGElement('line', {
+                        x1: startPos.x, y1: startPos.y, x2: startPos.x, y2: startPos.y,
+                        stroke: '#e5e5e5', 'stroke-width': 2
+                    });
+                } else if (currentMode === 'circle') {
+                    currentDrawingElement = createSVGElement('circle', {
+                        cx: startPos.x, cy: startPos.y, r: 0,
+                        fill: 'rgba(255,255,255,0.1)', stroke: '#e5e5e5', 'stroke-width': 1
+                    });
+                }
+                svgCanvas.appendChild(currentDrawingElement);
+                placeholderText.style.display = 'none';
+            }
+        });
+
+        svgCanvas.addEventListener('mousemove', (e) => {
+            if (currentMode === 'select') { handleDrag(e); }
+            if (!isDrawing) return;
+            const currentPos = getMousePosition(e);
+            if (currentMode === 'line') {
+                currentDrawingElement.setAttribute('x2', currentPos.x);
+                currentDrawingElement.setAttribute('y2', currentPos.y);
+            } else if (currentMode === 'circle') {
+                const dx = currentPos.x - startPos.x;
+                const dy = currentPos.y - startPos.y;
+                const radius = Math.sqrt(dx * dx + dy * dy);
+                currentDrawingElement.setAttribute('r', radius);
+            }
+        });
+
+        svgCanvas.addEventListener('mouseup', (e) => {
+            if (!isDrawing) return;
+            isDrawing = false;
+            makeDraggable(currentDrawingElement);
+            currentDrawingElement = null;
+        });
+        
+        // --- Helper Functions ---
+        function createSVGElement(tag, attrs) {
+            const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (let k in attrs) el.setAttribute(k, attrs[k]);
+            return el;
+        }
+        
+        // --- Existing Button Logic ---
+        addTextBtn.addEventListener('click', () => {
+            const textContent = textInput.value.trim();
+            if (!textContent) return;
+            const newText = createSVGElement('text', {
+                x: 400, y: 250, 'font-size': '30', fill: '#e5e5e5', 'text-anchor': 'middle',
+                style: 'font-family: Inter, sans-serif;'
+            });
+            newText.textContent = textContent;
+            svgCanvas.appendChild(newText);
+            makeDraggable(newText);
+            textInput.value = '';
+            placeholderText.style.display = 'none';
+        });
+
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const newImage = createSVGElement('image', {
+                    x: 350, y: 200, width: '100', height: '100', href: event.target.result
+                });
+                svgCanvas.appendChild(newImage);
+                makeDraggable(newImage);
+                placeholderText.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        fontSizeSlider.addEventListener('input', () => {
+            if(selectedElement && selectedElement.tagName === 'text') {
+                selectedElement.setAttribute('font-size', fontSizeSlider.value);
+            }
+        });
+        
+        deleteBtn.addEventListener('click', () => {
+            if(selectedElement) {
+                selectedElement.remove();
+                deselectElement();
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            const userElements = svgCanvas.querySelectorAll('.draggable');
+            userElements.forEach(el => el.remove());
+            deselectElement();
+            placeholderText.style.display = 'initial';
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            deselectElement();
+            placeholderText.style.display = 'none'; // Ensure placeholder isn't in download
+            const svgData = new XMLSerializer().serializeToString(svgCanvas);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = svgUrl;
+            downloadLink.download = 'custom-tray-design.svg';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            placeholderText.style.display = 'initial';
+        });
+
+    });
+    </script>
+</body>
+</html>
+
