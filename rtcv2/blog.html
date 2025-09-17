@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Journal - The Rolling Tray Co</title>
+    <meta name="description" content="Updates from the workshop, musings on the craft, and a look at what's next for The Rolling Tray Co.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Link to SHARED stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Link to blog-specific stylesheet -->
+    <link rel="stylesheet" href="blog-style.css">
+</head>
+<body class="antialiased">
+
+    <!-- Header (Consistent with homepage) -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-lg bg-black/30">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center space-x-3">
+                <span class="text-xl font-bold tracking-wider">The Rolling Tray Co</span>
+            </a>
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html#shop" class="hover:text-violet-400 transition-colors">Collection</a>
+                <a href="index.html#features" class="hover:text-violet-400 transition-colors">Features</a>
+                <a href="index.html#about" class="hover:text-violet-400 transition-colors">Our Story</a>
+                <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+            </nav>
+            <!-- Note: The cart button will require the main script.js for full functionality if it were here -->
+        </div>
+    </header>
+
+    <main class="pt-24">
+        <!-- Blog Hero Section -->
+        <section class="py-20 text-center">
+            <div class="container mx-auto px-6">
+                <h1 class="text-5xl md:text-7xl font-black uppercase">
+                    <span class="gradient-text">The Journal</span>
+                </h1>
+                <p class="mt-4 max-w-lg mx-auto text-neutral-400 md:text-lg">
+                    Updates from the workshop, musings on the craft, and a look at what's next.
+                </p>
+            </div>
+        </section>
+
+        <!-- Article Grid -->
+        <section class="pb-24">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Article 1 -->
+                    <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="workshop">
+                        <h2 class="text-2xl font-bold gradient-text flex-grow">From the Workshop: What's Next for The Rolling Tray Co</h2>
+                        <p class="mt-4 text-neutral-400">An inside look at our vision for the future, including new woods, expanded designs, and the exciting introduction of bespoke services.</p>
+                        <span class="mt-6 font-bold text-violet-400">Read More &rarr;</span>
+                    </div>
+
+                    <!-- Article 2 -->
+                    <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="care">
+                        <h2 class="text-2xl font-bold gradient-text flex-grow">A Guide to Caring For Your Hardwood Tray</h2>
+                        <p class="mt-4 text-neutral-400">Your tray is built to last a lifetime. Learn the simple steps to keep the wood nourished, protected, and looking its absolute best.</p>
+                        <span class="mt-6 font-bold text-violet-400">Read More &rarr;</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Consistent with homepage) -->
+    <footer class="py-12 border-t border-neutral-900">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Article Modal -->
+    <div id="article-modal" class="article-modal fixed inset-0 z-[101] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0">
+        <div class="article-modal-content w-full max-w-3xl max-h-[90vh] bg-[#111] rounded-2xl flex flex-col overflow-hidden scale-95">
+            <div class="flex-shrink-0 flex justify-between items-center p-6 border-b border-neutral-800">
+                <h2 id="modal-title" class="text-2xl font-bold">Article Title</h2>
+                <button id="close-modal-btn" class="text-2xl">&times;</button>
+            </div>
+            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none">
+                <!-- Article content will be injected here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Article Content Templates -->
+    <div class="hidden">
+        <div id="workshop-content">
+            <h3>Our Vision for the Future</h3>
+            <p>Here at The Rolling Tray Co, the workshop is never quiet. We're driven by a passion for the craft and are constantly exploring new ways to elevate the tools of your ritual. We're excited to give you a glimpse into what's on the horizon.</p>
+            <h4>Expanding the Wood Selection</h4>
+            <p>While we love our core selection of Ash, Walnut, and Sapele, we're currently sourcing and testing a range of exotic and unique hardwoods. Imagine the deep, inky blacks of Wenge or the striking stripes of Zebrano. Our goal is to offer a palette of materials that allows you to find a tray that truly matches your personal style.</p>
+            <h4>New Designs & Accessories</h4>
+            <p>The classic tray design is our foundation, but we're refining new layouts and companion pieces. Get ready for:</p>
+            <ul>
+                <li><strong>Clipper Lighter Stands:</strong> Beautifully crafted stands to display your collection.</li>
+                <li><strong>Matching Ashtrays:</strong> Elegant, minimalist ashtrays designed to complement your tray.</li>
+                <li><strong>Multi-Level Trays:</strong> For the connoisseur who needs more space and organization.</li>
+            </ul>
+            <h4>The Bespoke Studio: Your Vision, Our Hands</h4>
+            <p>This is our most ambitious project yet. We will be launching a custom order service where you become the designer. Through an interactive tool on our website, you will be able to design your own tray layout, choose your wood, and even add custom engravings. It's the ultimate expression of personal style, and we cannot wait to bring your vision to life.</p>
+            <p>Stay tuned to The Journal for official launch dates and sneak peeks. The best is yet to come.</p>
+        </div>
+        <div id="care-content">
+            <h3>Keeping Your Tray in Prime Condition</h3>
+            <p>A hardwood rolling tray is an investment in your ritual. With a few simple steps, you can ensure it remains a beautiful and functional centerpiece for years, even decades, to come. Wood is a natural material, and a little care goes a long way.</p>
+            <h4>Regular Cleaning</h4>
+            <p>After each session, simply use a soft, dry cloth or a soft-bristled brush (like a clean paintbrush) to wipe away any loose material. For more stubborn residue, a slightly damp cloth is all you need. <strong>Never</strong> submerge your tray in water or use harsh chemical cleaners, as this will damage the wood and the finish.</p>
+            <h4>Conditioning the Wood (The Most Important Step)</h4>
+            <p>Every month or two, or whenever the wood starts to look a little dry or dull, it's time to re-condition it. This nourishes the wood and protects it from drying out.</p>
+            <ol>
+                <li>Apply a small amount of food-safe mineral oil or a specialized wood butter/wax to a clean, soft cloth.</li>
+                <li>Gently rub the conditioner into the wood, following the direction of the grain. Make sure to cover the entire surface, including the cutouts and edges.</li>
+                <li>Let it sit and soak in for at least 20-30 minutes (or even overnight).</li>
+                <li>With another clean cloth, buff off any excess. The wood will have a renewed, satin sheen.</li>
+            </ol>
+            <h4>What to Avoid</h4>
+            <ul>
+                <li><strong>Direct Sunlight:</strong> Prolonged exposure to sunlight can fade the wood's natural colour.</li>
+                <li><strong>Extreme Temperatures:</strong> Avoid leaving your tray near a radiator or in a cold car, as drastic temperature changes can cause the wood to warp or crack.</li>
+                <li><strong>Dishwashers:</strong> Absolutely never put your tray in a dishwasher.</li>
+            </ul>
+            <p>That's it! With minimal effort, your tray will not only perform flawlessly but will also develop a richer character and patina over time.</p>
+        </div>
+    </div>
+
+    <!-- Link to external blog JavaScript -->
+    <script src="blog.js" defer></script>
+</body>
+</html>
+
