@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
     };
 
+
     // --- Shopify API Fetch Function ---
     async function shopifyFetch({ query, variables }) {
         try {
@@ -302,12 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalContent = articleModal.querySelector('#modal-content');
         const closeModalBtn = articleModal.querySelector('#close-modal-btn');
 
-        const openModal = (articleId) => {
+        const openModal = (articleId, title) => {
             const contentTemplate = document.getElementById(`${articleId}-content`);
-            const articleTitle = document.querySelector(`.article-card[data-article="${articleId}"] h2`).textContent;
 
             if (contentTemplate) {
-                modalTitle.textContent = articleTitle;
+                modalTitle.textContent = title;
                 modalContent.innerHTML = contentTemplate.innerHTML;
                 articleModal.classList.remove('hidden');
                 setTimeout(() => articleModal.classList.remove('opacity-0'), 10);
@@ -322,8 +322,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         articleCards.forEach(card => {
-            card.addEventListener('click', () => {
-                openModal(card.dataset.article);
+            card.addEventListener('click', (event) => {
+                const clickedCard = event.currentTarget;
+                const articleId = clickedCard.dataset.article;
+                const articleTitle = clickedCard.querySelector('h2').textContent;
+                openModal(articleId, articleTitle);
             });
         });
 
