@@ -27,10 +27,6 @@
             color: #e5e5e5;
             overflow-x: hidden;
         }
-        /* ** NEW: Lock body scroll when modal is open ** */
-        body.modal-open {
-            overflow: hidden;
-        }
         .gradient-text {
             background: linear-gradient(90deg, #a78bfa, #c4b5fd);
             -webkit-background-clip: text;
@@ -217,149 +213,121 @@
 document.addEventListener('DOMContentLoaded', () => {
     // This script contains logic for the blog page modal, contact form, and newsletter signup.
     
-    // --- Shopify Config for Newsletter ---
-    const shopifyConfig = {
-        domain: 'connoisseurcustoms.myshopify.com',
-        storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
-        apiVersion: '2024-07'
-    };
+    const App = {
+        shopifyConfig: {
+            domain: 'connoisseurcustoms.myshopify.com',
+            storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
+            apiVersion: '2024-07'
+        },
+        state: { scrollY: 0 },
+        elements: {
+            articleGrid: document.getElementById('article-grid'),
+            articleModal: document.getElementById('article-modal'),
+            newsletterForm: document.getElementById('newsletter-form'),
+            notificationToast: document.getElementById('notification-toast'),
+        },
 
-    // --- General Helper Functions ---
-    function observeScrollAnimations() {
-        const scrollElements = document.querySelectorAll('.scroll-animate:not(.visible)');
-        if (!scrollElements.length) return;
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        scrollElements.forEach(el => observer.observe(el));
-    }
-
-    function showNotification(message, type = 'success') {
-        const toast = document.getElementById('notification-toast');
-        if (!toast) return;
-        
-        toast.textContent = message;
-        toast.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600', 'hidden');
-
-        if (type === 'error') toast.classList.add('bg-red-600');
-        else if (type === 'info') toast.classList.add('bg-blue-600');
-        else toast.classList.add('bg-green-600');
-        
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 10);
-
-        setTimeout(() => {
-            toast.classList.remove('show');
-             setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 500);
-        }, 3000);
-    }
-    
-    // --- Blog Page Logic ---
-    function initBlogPage() {
-        const articleGrid = document.getElementById('article-grid');
-        const articleModal = document.getElementById('article-modal');
-        if (!articleGrid || !articleModal) return;
-
-        const modalTitle = articleModal.querySelector('#modal-title');
-        const modalContent = articleModal.querySelector('#modal-content');
-        const closeModalBtn = articleModal.querySelector('#close-modal-btn');
-
-        const openModal = (articleId, title) => {
-            document.body.classList.add('modal-open');
-            const contentTemplate = document.getElementById(`${articleId}-content`);
-            if (!contentTemplate) { return; }
-            modalTitle.textContent = title;
-            modalContent.innerHTML = contentTemplate.innerHTML;
-            articleModal.classList.remove('hidden', 'opacity-0');
-            articleModal.querySelector('.article-modal-content').classList.remove('scale-95');
-        };
-
-        const closeModal = () => {
-            document.body.classList.remove('modal-open');
-            articleModal.classList.add('opacity-0');
-            articleModal.querySelector('.article-modal-content').classList.add('scale-95');
-            setTimeout(() => articleModal.classList.add('hidden'), 300);
-        };
-
-        articleGrid.addEventListener('click', (event) => {
-            const clickedCard = event.target.closest('.article-card');
-            if (!clickedCard) return;
-            openModal(clickedCard.dataset.article, clickedCard.querySelector('h2').textContent);
-        });
-
-        closeModalBtn.addEventListener('click', closeModal);
-        articleModal.addEventListener('click', (e) => (e.target === articleModal) && closeModal());
-    }
-
-    // --- Contact & Newsletter Logic ---
-    function initForms() {
-        const sendEmailBtn = document.getElementById('send-email-btn');
-        if (sendEmailBtn) {
-            sendEmailBtn.addEventListener('click', () => {
-                const name = document.getElementById('contact-name').value;
-                const email = document.getElementById('contact-email').value;
-                const message = document.getElementById('contact-message').value;
-                const subject = `Message from ${name} via Website`;
-                const mailtoLink = `mailto:website@therollingtray.co?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}%0A%0AFrom:%20${name}%0AEmail:%20${email}`;
-                window.location.href = mailtoLink;
-            });
-        }
-
-        const newsletterForm = document.getElementById('newsletter-form');
-        if (newsletterForm) {
-            newsletterForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const emailInput = document.getElementById('newsletter-email');
-                const email = emailInput.value;
-
-                const mutation = `
-                    mutation customerCreate($input: CustomerCreateInput!) {
-                        customerCreate(input: $input) {
-                            customer { id }
-                            customerUserErrors { code field message }
-                        }
-                    }`;
-                const variables = { input: { email: email, acceptsMarketing: true } };
-                
-                try {
-                    const endpoint = `https://${shopifyConfig.domain}/api/${shopifyConfig.apiVersion}/graphql.json`;
-                    const response = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': shopifyConfig.storefrontAccessToken },
-                        body: JSON.stringify({ query: mutation, variables })
-                    });
-                    const result = await response.json();
-
-                    if (result.data?.customerCreate?.customer) {
-                        showNotification('Thank you for subscribing!', 'success');
-                        emailInput.value = '';
-                    } else {
-                        const error = result.data?.customerCreate?.customerUserErrors[0];
-                        if (error && error.code === 'TAKEN') {
-                            showNotification('This email is already subscribed.', 'info');
-                        } else {
-                            showNotification('Could not subscribe. Please try again.', 'error');
-                        }
+        observeScrollAnimations() {
+            const scrollElements = document.querySelectorAll('.scroll-animate:not(.visible)');
+            if (!scrollElements.length) return;
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
                     }
-                } catch (err) {
-                    showNotification('An error occurred.', 'error');
-                }
+                });
+            }, { threshold: 0.1 });
+            scrollElements.forEach(el => observer.observe(el));
+        },
+        showNotification(message, type = 'success') {
+            if (!this.elements.notificationToast) return;
+            this.elements.notificationToast.textContent = message;
+            this.elements.notificationToast.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600', 'hidden');
+            if (type === 'error') this.elements.notificationToast.classList.add('bg-red-600');
+            else if (type === 'info') this.elements.notificationToast.classList.add('bg-blue-600');
+            else this.elements.notificationToast.classList.add('bg-green-600');
+            setTimeout(() => { this.elements.notificationToast.classList.add('show'); }, 10);
+            setTimeout(() => {
+                this.elements.notificationToast.classList.remove('show');
+                setTimeout(() => { this.elements.notificationToast.classList.add('hidden'); }, 500);
+            }, 3000);
+        },
+        initBlogPage() {
+            if (!this.elements.articleGrid || !this.elements.articleModal) return;
+            const modalTitle = this.elements.articleModal.querySelector('#modal-title');
+            const modalContent = this.elements.articleModal.querySelector('#modal-content');
+            const openModal = (articleId, title) => {
+                this.state.scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${this.state.scrollY}px`;
+                document.body.style.width = '100%';
+                const contentTemplate = document.getElementById(`${articleId}-content`);
+                if (!contentTemplate) return;
+                modalTitle.textContent = title;
+                modalContent.innerHTML = contentTemplate.innerHTML;
+                this.elements.articleModal.classList.remove('hidden', 'opacity-0');
+                this.elements.articleModal.querySelector('.article-modal-content').classList.remove('scale-95');
+            };
+            const closeModal = () => {
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                window.scrollTo(0, this.state.scrollY);
+                this.elements.articleModal.classList.add('opacity-0');
+                this.elements.articleModal.querySelector('.article-modal-content').classList.add('scale-95');
+                setTimeout(() => this.elements.articleModal.classList.add('hidden'), 300);
+            };
+            this.elements.articleGrid.addEventListener('click', (event) => {
+                const clickedCard = event.target.closest('.article-card');
+                if (clickedCard) openModal(clickedCard.dataset.article, clickedCard.querySelector('h2').textContent);
             });
+            this.elements.articleModal.querySelector('#close-modal-btn').addEventListener('click', closeModal);
+            this.elements.articleModal.addEventListener('click', (e) => (e.target === this.elements.articleModal) && closeModal());
+        },
+        initForms() {
+            const sendEmailBtn = document.getElementById('send-email-btn');
+            if (sendEmailBtn) {
+                sendEmailBtn.addEventListener('click', () => {
+                    const name = document.getElementById('contact-name').value;
+                    const email = document.getElementById('contact-email').value;
+                    const message = document.getElementById('contact-message').value;
+                    const subject = `Message from ${name} via Website`;
+                    window.location.href = `mailto:website@therollingtray.co?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}%0A%0AFrom:%20${name}%0AEmail:%20${email}`;
+                });
+            }
+            if (this.elements.newsletterForm) {
+                this.elements.newsletterForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const emailInput = document.getElementById('newsletter-email');
+                    const email = emailInput.value;
+                    const mutation = `mutation customerCreate($input: CustomerCreateInput!) { customerCreate(input: $input) { customer { id } customerUserErrors { code field message } } }`;
+                    try {
+                        const endpoint = `https://${this.shopifyConfig.domain}/api/${this.shopifyConfig.apiVersion}/graphql.json`;
+                        const response = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': this.shopifyConfig.storefrontAccessToken },
+                            body: JSON.stringify({ query: mutation, variables: { input: { email: email, acceptsMarketing: true } } })
+                        });
+                        const result = await response.json();
+                        if (result.data?.customerCreate?.customer) {
+                            this.showNotification('Thank you for subscribing!', 'success');
+                            emailInput.value = '';
+                        } else {
+                            const error = result.data?.customerCreate?.customerUserErrors[0];
+                            this.showNotification(error && error.code === 'TAKEN' ? 'This email is already subscribed.' : 'Could not subscribe. Please try again.', error && error.code === 'TAKEN' ? 'info' : 'error');
+                        }
+                    } catch (err) { this.showNotification('An error occurred.', 'error'); }
+                });
+            }
+        },
+        init() {
+            this.initBlogPage();
+            this.initForms();
+            this.observeScrollAnimations();
         }
-    }
-
-    // --- Initialize All Page Logic ---
-    initBlogPage();
-    initForms();
-    observeScrollAnimations();
+    };
+    App.init();
 });
 </script>
 </body>
