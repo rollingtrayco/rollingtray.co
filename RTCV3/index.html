@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Rolling Tray Co - Premium Rolling Trays</title>
     <!-- SEO Meta Tags -->
     <meta name="description" content="Discover The Rolling Tray Co's collection of handcrafted hardwood rolling trays. Premium materials, functional design, and timeless style for the modern connoisseur.">
@@ -240,7 +240,7 @@
     <!-- Footer -->
     <footer class="py-12 border-t border-neutral-900">
         <div class="container mx-auto px-6 text-center">
-            <p class="text-neutral-500 text-sm">&copy; 2025 The Rolling Tray Co. All Rights Reserved.</p>
+            <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cartSubtotalEl = document.getElementById('cart-subtotal');
         const checkoutBtn = document.getElementById('checkout-btn');
         let cartId = localStorage.getItem('shopifyCartId');
-        let cart = {};
+        let checkoutUrl = ''; // ** NEW: Dedicated variable for checkout URL
 
         async function shopifyFetch({ query, variables }) {
             try {
@@ -402,14 +402,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function closeProductModal() { productModal.classList.add('hidden'); }
         
-        async function createCart(){const t=await shopifyFetch({query:`mutation{cartCreate{cart{...CartFragment}}}${cartFragment}`});if(t.data?.cartCreate?.cart){const a=t.data.cartCreate.cart;cartId=a.id,localStorage.setItem("shopifyCartId",cartId),updateCartUI(a)}}async function fetchCart(){const t=await shopifyFetch({query:`query($cartId:ID!){cart(id:$cartId){...CartFragment}}${cartFragment}`,variables:{cartId:cartId}});t.data?.cart?updateCartUI(t.data.cart):(localStorage.removeItem("shopifyCartId"),await createCart())}async function addToCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lines:[{merchandiseId:t,quantity:1}]}});a.data?.cartLinesAdd?.cart&&updateCartUI(a.data.cartLinesAdd.cart)}async function removeFromCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lineIds:[ID!]!){cartLinesRemove(cartId:$cartId,lineIds:$lineIds){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lineIds:[t]}});a.data?.cartLinesRemove?.cart&&updateCartUI(a.data.cartLinesRemove.cart)}
         function updateCartUI(cartData) {
             if (!cartData) return;
-            cart = cartData;
+            
+            checkoutUrl = cartData.checkoutUrl; // ** THE FIX IS HERE **
+            
             let totalQuantity = 0;
             cartItemsContainer.innerHTML = '';
-            if (cart.lines?.edges?.length > 0) {
-                cart.lines.edges.forEach(({ node }) => {
+            if (cartData.lines?.edges?.length > 0) {
+                cartData.lines.edges.forEach(({ node }) => {
                     totalQuantity += node.quantity;
                     cartItemsContainer.innerHTML += `<div class="flex items-center gap-4 mb-4"><img src="${node.merchandise?.image?.url || ''}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${node.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${node.quantity}</p></div><p class="font-bold">£${parseFloat(node.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${node.id}">&times;</button></div>`;
                 });
@@ -419,9 +420,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkoutBtn.disabled = true;
             }
             cartCount.textContent = totalQuantity;
-            cartSubtotalEl.textContent = `£${parseFloat(cart.cost?.subtotalAmount?.amount || 0).toFixed(2)}`;
+            cartSubtotalEl.textContent = `£${parseFloat(cartData.cost?.subtotalAmount?.amount || 0).toFixed(2)}`;
         }
 
+        async function createCart(){const t=await shopifyFetch({query:`mutation{cartCreate{cart{...CartFragment}}}${cartFragment}`});if(t.data?.cartCreate?.cart){const a=t.data.cartCreate.cart;cartId=a.id,localStorage.setItem("shopifyCartId",cartId),updateCartUI(a)}}async function fetchCart(){const t=await shopifyFetch({query:`query($cartId:ID!){cart(id:$cartId){...CartFragment}}${cartFragment}`,variables:{cartId:cartId}});t.data?.cart?updateCartUI(t.data.cart):(localStorage.removeItem("shopifyCartId"),await createCart())}async function addToCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lines:[{merchandiseId:t,quantity:1}]}});a.data?.cartLinesAdd?.cart&&updateCartUI(a.data.cartLinesAdd.cart)}async function removeFromCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lineIds:[ID!]!){cartLinesRemove(cartId:$cartId,lineIds:$lineIds){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lineIds:[t]}});a.data?.cartLinesRemove?.cart&&updateCartUI(a.data.cartLinesRemove.cart)}
+        
         productGrid.addEventListener('click', (e) => {
             const productCard = e.target.closest('.product-card');
             if (productCard) {
@@ -439,12 +442,11 @@ document.addEventListener('DOMContentLoaded', () => {
         cartOverlay.addEventListener('click', closeCart);
         cartItemsContainer.addEventListener('click', e => e.target.closest('.remove-from-cart-btn') && removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.lineId));
         
-        // ** THE FIX IS HERE **
         checkoutBtn.addEventListener('click', () => {
-            if (cart && cart.checkoutUrl) {
-                window.location.href = cart.checkoutUrl;
+            if (checkoutUrl) { // ** THE FIX IS HERE **
+                window.location.href = checkoutUrl;
             } else {
-                console.error('Checkout Error: checkoutUrl not found on cart object.', cart);
+                console.error('Checkout Error: checkoutUrl is not available.');
             }
         });
         
@@ -509,14 +511,8 @@ document.addEventListener('DOMContentLoaded', () => {
         })();
     }
 
-    function initBlogpage() {
-        // Blog page logic will be added back here later if needed
-    }
-
     if (document.getElementById('product-grid')) {
         initHomepage();
-    } else if (document.getElementById('article-grid')) {
-        // initBlogpage(); // We can combine this later
     }
 });
 </script>
