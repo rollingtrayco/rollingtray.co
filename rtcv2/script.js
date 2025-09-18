@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let cartId = localStorage.getItem('shopifyCartId');
         let cart = {};
 
-        // --- ROBUST Shopify API Fetch Function ---
         async function shopifyFetch({ query, variables }) {
             try {
                 const response = await fetch(`https://${shopifyConfig.domain}/api/2024-04/graphql.json`, {
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const cartFragment = `fragment CartFragment on Cart { id checkoutUrl lines(first: 100) { edges { node { id quantity merchandise { ... on ProductVariant { id image { url } price { amount } product { title } } } } } } cost { subtotalAmount { amount } } }`;
 
-        // --- Fetch and Display Products ---
         async function fetchProducts() {
             const productsQuery = `query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;
             const response = await shopifyFetch({ query: productsQuery });
@@ -80,39 +78,18 @@ document.addEventListener('DOMContentLoaded', () => {
             observeScrollAnimations();
         }
         
-        // --- Product Modal Logic ---
         async function openProductModal(handle) {
-            if (!handle) {
-                console.error("openProductModal called with no handle.");
-                return;
-            }
-            
-            // Show loading state
+             if (!handle) { return; }
             productModal.classList.remove('hidden');
-            productModal.querySelector('#modal-content-wrapper').classList.add('hidden');
-            productModal.querySelector('#modal-loading-state').classList.remove('hidden');
-
             const productQuery = `query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }`;
             const response = await shopifyFetch({ query: productQuery, variables: { handle } });
-
-            // Hide loading state
-            productModal.querySelector('#modal-loading-state').classList.add('hidden');
-            
-            if (!response.data || !response.data.product) {
-                console.error("Failed to fetch product details for handle:", handle);
-                // Optionally show an error message in the modal
-                return;
-            }
-            
+            if (!response.data || !response.data.product) { return; }
             const product = response.data.product;
-            
             productModal.querySelector('#modal-title').textContent = product.title;
             productModal.querySelector('#modal-price').textContent = `£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}`;
             productModal.querySelector('#modal-description').innerHTML = product.descriptionHtml;
-            
             const addToCartBtn = productModal.querySelector('#modal-add-to-cart-btn');
             const variant = product.variants?.edges?.[0]?.node;
-
             if (variant) {
                 addToCartBtn.dataset.variantId = variant.id;
                 addToCartBtn.disabled = !variant.availableForSale;
@@ -121,11 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 addToCartBtn.disabled = true;
                 addToCartBtn.textContent = 'Unavailable';
             }
-            
             const mainImage = productModal.querySelector('#modal-main-image');
             const imageGallery = productModal.querySelector('#modal-image-gallery');
             imageGallery.innerHTML = ''; 
-
             if (product.images.edges.length > 0) {
                 mainImage.src = product.images.edges[0].node.url;
                 product.images.edges.forEach(edge => {
@@ -134,33 +109,24 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 mainImage.src = `https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(product.title)}`;
             }
-
-            productModal.querySelector('#modal-content-wrapper').classList.remove('hidden');
         }
 
-        function closeProductModal() { 
-            productModal.classList.add('hidden'); 
-        }
+        function closeProductModal() { productModal.classList.add('hidden'); }
         
-        // --- Cart Logic (Omitted for brevity) ---
         async function createCart(){const t=await shopifyFetch({query:`mutation{cartCreate{cart{...CartFragment}}}${cartFragment}`});if(t.data?.cartCreate?.cart){const a=t.data.cartCreate.cart;cartId=a.id,localStorage.setItem("shopifyCartId",cartId),updateCartUI(a)}}async function fetchCart(){const t=await shopifyFetch({query:`query($cartId:ID!){cart(id:$cartId){...CartFragment}}${cartFragment}`,variables:{cartId:cartId}});t.data?.cart?updateCartUI(t.data.cart):(localStorage.removeItem("shopifyCartId"),await createCart())}async function addToCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lines:[{merchandiseId:t,quantity:1}]}});a.data?.cartLinesAdd?.cart&&updateCartUI(a.data.cartLinesAdd.cart)}async function removeFromCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lineIds:[ID!]!){cartLinesRemove(cartId:$cartId,lineIds:$lineIds){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lineIds:[t]}});a.data?.cartLinesRemove?.cart&&updateCartUI(a.data.cartLinesRemove.cart)}function updateCartUI(t){if(!t)return;cart=t;let a=0;cartItemsContainer.innerHTML="",cart.lines?.edges?.length>0?(cart.lines.edges.forEach(({node:t})=>{a+=t.quantity,cartItemsContainer.innerHTML+=`<div class="flex items-center gap-4 mb-4"><img src="${t.merchandise?.image?.url||""}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${t.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${t.quantity}</p></div><p class="font-bold">\£${parseFloat(t.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${t.id}">&times;</button></div>`}),checkoutBtn.disabled=!1):(cartItemsContainer.innerHTML='<p class="text-neutral-500">Your cart is empty.</p>',checkoutBtn.disabled=!0),cartCount.textContent=a,cartSubtotalEl.textContent=`\£${parseFloat(cart.cost?.subtotalAmount?.amount||0).toFixed(2)}`}
 
-
         // --- Event Listeners ---
-        // ** THE FIX IS HERE: Using robust event delegation **
         productGrid.addEventListener('click', (e) => {
             const productCard = e.target.closest('.product-card');
             if (productCard) {
                 openProductModal(productCard.dataset.productHandle);
             }
         });
-
         productModal.addEventListener('click', e => {
             if (e.target.id === 'close-modal-btn' || e.target === productModal) closeProductModal();
             if (e.target.classList.contains('thumbnail')) productModal.querySelector('#modal-main-image').src = e.target.src;
             if (e.target.id === 'modal-add-to-cart-btn') { addToCart(e.target.dataset.variantId); closeProductModal(); }
         });
-        
         cartButton.addEventListener('click', () => { cartPanel.classList.add('open'); cartOverlay.classList.remove('hidden'); });
         const closeCart = () => { cartPanel.classList.remove('open'); cartOverlay.classList.add('hidden'); };
         closeCartButton.addEventListener('click', closeCart);
@@ -168,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItemsContainer.addEventListener('click', e => e.target.closest('.remove-from-cart-btn') && removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.lineId));
         checkoutBtn.addEventListener('click', () => cart.checkoutUrl && (window.location.href = cart.checkoutUrl));
         
+        // ** THE FIX IS HERE: ALL ANIMATION CODE IS NOW INCLUDED **
         // --- Animations ---
         const heroHeading = document.getElementById('hero-heading');
         if (heroHeading) {
@@ -179,6 +146,52 @@ document.addEventListener('DOMContentLoaded', () => {
                heroHeading.style.opacity = opacity;
             });
         }
+        
+        const canvas = document.getElementById('particle-canvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particles = [];
+            const particleCount = 50;
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.speedY = Math.random() * 1 - 0.5;
+                    this.color = `rgba(139, 92, 246, ${Math.random()})`;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            function initParticles() {
+                for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+            }
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    particles[i].update();
+                    particles[i].draw();
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            initParticles();
+            animateParticles();
+        }
+
 
         // --- Final Init ---
         (async () => {
@@ -189,9 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })();
     }
 
-    // =================================================================
-    //   BLOG PAGE INITIALIZER
-    // =================================================================
     function initBlogpage() {
         const articleGrid = document.getElementById('article-grid');
         const articleModal = document.getElementById('article-modal');
