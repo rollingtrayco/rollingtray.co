@@ -3,6 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ** SECURITY: Content Security Policy ** -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' https: data:;
+        connect-src 'self' https://connoisseurcustoms.myshopify.com;">
+        
     <title>The Journal - The Rolling Tray Co</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -68,7 +78,7 @@
             <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 <!-- Article Card 1 -->
                 <div class="article-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-article="care-guide">
-                    <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="A well-maintained wooden tray" class="w-full h-48 object-cover">
+                    <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="A well-maintained wooden tray" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <h2 class="text-2xl font-bold">The Art of Care: A Connoisseur's Guide</h2>
                         <p class="mt-2 text-neutral-400">Your tray is an investment in your ritual. Learn the simple steps to keep the hardwood conditioned, protected, and looking its best for years to come.</p>
@@ -76,7 +86,7 @@
                 </div>
                 <!-- Article Card 2 -->
                 <div class="article-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-article="workshop-preview" style="transition-delay: 150ms;">
-                    <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Glimpse of new products" class="w-full h-48 object-cover">
+                    <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Glimpse of new products" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <h2 class="text-2xl font-bold">From the Workshop: What’s Next for The Rolling Tray Co</h2>
                         <p class="mt-2 text-neutral-400">An exclusive look at the new designs, materials, and bespoke services we're developing. Get ready for the next level of refinement.</p>
