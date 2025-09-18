@@ -1,130 +1,361 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ** SECURITY: Content Security Policy ** -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' https: data:;
+        connect-src 'self' https://connoisseurcustoms.myshopify.com;">
+        
     <title>The Journal - The Rolling Tray Co</title>
-    <meta name="description" content="Updates from the workshop, musings on the craft, and a look at what's next for The Rolling Tray Co.">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+             background-image: linear-gradient(to right, #8b5cf6, #a78bfa);
+        }
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Prose styles for blog/product descriptions */
+        .prose-invert h3 { color: #fff; }
+        .prose-invert p, .prose-invert li { color: #d1d5db; }
+        .prose-invert ul > li::before { background-color: #a78bfa; }
+        /* Notification Toast */
+        .toast {
+            transform: translateY(120%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .toast.show {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body class="antialiased">
-
+    
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-lg bg-black/30">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center space-x-3">
-                <span class="text-xl font-bold tracking-wider">The Rolling Tray Co</span>
-            </a>
+            <a href="/" class="text-xl font-bold tracking-wider">The Rolling Tray Co</a>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="index.html#shop" class="hover:text-violet-400 transition-colors">Collection</a>
-                <a href="index.html#features" class="hover:text-violet-400 transition-colors">Features</a>
-                <a href="index.html#about" class="hover:text-violet-400 transition-colors">Our Story</a>
-                <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+                <a href="/#shop" class="hover:text-violet-400 transition-colors">Collection</a>
+                <a href="/#features" class="hover:text-violet-400 transition-colors">Features</a>
+                <a href="/blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+                <a href="/#about" class="hover:text-violet-400 transition-colors">Our Story</a>
+                <a href="/#contact" class="hover:text-violet-400 transition-colors">Contact</a>
+                <a href="/#faq" class="hover:text-violet-400 transition-colors">FAQ</a>
             </nav>
+            <div class="w-14 h-6"></div> <!-- Placeholder to keep alignment -->
         </div>
     </header>
 
-    <main class="pt-24">
-        <!-- Blog Hero Section -->
-        <section class="py-20 text-center">
+    <main class="pt-32">
+        <!-- Blog Header -->
+        <section class="text-center py-16">
             <div class="container mx-auto px-6">
-                <h1 class="text-5xl md:text-7xl font-black uppercase">
-                    <span class="gradient-text">The Journal</span>
-                </h1>
-                <p class="mt-4 max-w-lg mx-auto text-neutral-400 md:text-lg">
-                    Updates from the workshop, musings on the craft, and a look at what's next.
-                </p>
+                <h1 class="text-5xl md:text-7xl font-black"><span class="gradient-text">The Journal</span></h1>
+                <p class="mt-4 max-w-2xl mx-auto text-neutral-400 md:text-lg">Insights, stories, and news from our workshop. A space for connoisseurs who appreciate the finer details.</p>
             </div>
         </section>
 
-        <!-- Article Grid -->
-        <section class="pb-24">
-            <div class="container mx-auto px-6">
-                <!-- THIS IS THE CRUCIAL FIX: Added id="article-grid" -->
-                <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Article 1 -->
-                    <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="workshop">
-                        <h2 class="text-2xl font-bold gradient-text flex-grow">From the Workshop: What's Next for The Rolling Tray Co</h2>
-                        <p class="mt-4 text-neutral-400">An inside look at our vision for the future, including new woods, expanded designs, and the exciting introduction of bespoke services.</p>
-                        <span class="mt-6 font-bold text-violet-400">Read More &rarr;</span>
+        <!-- Blog Grid -->
+        <section id="article-grid" class="pb-24">
+            <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Article Card 1 -->
+                <div class="article-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-article="care-guide">
+                    <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="A well-maintained wooden tray" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold">The Art of Care: A Connoisseur's Guide</h2>
+                        <p class="mt-2 text-neutral-400">Your tray is an investment in your ritual. Learn the simple steps to keep the hardwood conditioned, protected, and looking its best for years to come.</p>
                     </div>
-
-                    <!-- Article 2 -->
-                    <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="care">
-                        <h2 class="text-2xl font-bold gradient-text flex-grow">A Guide to Caring For Your Hardwood Tray</h2>
-                        <p class="mt-4 text-neutral-400">Your tray is built to last a lifetime. Learn the simple steps to keep the wood nourished, protected, and looking its absolute best.</p>
-                        <span class="mt-6 font-bold text-violet-400">Read More &rarr;</span>
+                </div>
+                <!-- Article Card 2 -->
+                <div class="article-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-article="workshop-preview" style="transition-delay: 150ms;">
+                    <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Glimpse of new products" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h2 class="text-2xl font-bold">From the Workshop: What’s Next for The Rolling Tray Co</h2>
+                        <p class="mt-2 text-neutral-400">An exclusive look at the new designs, materials, and bespoke services we're developing. Get ready for the next level of refinement.</p>
                     </div>
                 </div>
             </div>
         </section>
-    </main>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-black">
+            <div class="container mx-auto px-6 max-w-3xl text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 scroll-animate">Get in Touch</h2>
+                <p class="text-neutral-400 mb-8 max-w-xl mx-auto scroll-animate" style="transition-delay: 150ms;">Have a question, a custom request, or just want to talk shop? We'd love to hear from you.</p>
+                <div id="contact-form" class="bg-[#111] p-8 rounded-lg text-left scroll-animate" style="transition-delay: 300ms;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="contact-name" class="block text-sm font-medium text-neutral-400 mb-2">Name</label>
+                            <input type="text" id="contact-name" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block text-sm font-medium text-neutral-400 mb-2">Email</label>
+                            <input type="email" id="contact-email" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="contact-message" class="block text-sm font-medium text-neutral-400 mb-2">Message</label>
+                        <textarea id="contact-message" rows="4" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></textarea>
+                    </div>
+                    <a id="send-email-btn" class="w-full text-center btn-gradient text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 cursor-pointer flex items-center justify-center gap-2">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
 
+    </main>
+    
     <!-- Footer -->
-    <footer class="py-12 border-t border-neutral-900">
+    <footer class="py-16 border-t border-neutral-900">
         <div class="container mx-auto px-6 text-center">
+             <!-- Newsletter Form -->
+            <div class="max-w-md mx-auto mb-12">
+                <h3 class="text-xl font-bold mb-2">Join the Inner Circle</h3>
+                <p class="text-neutral-400 mb-4 text-sm">Be the first to know about new products, limited runs, and exclusive offers.</p>
+                <form id="newsletter-form" class="flex">
+                    <input type="email" id="newsletter-email" placeholder="Enter your email" required class="w-full bg-neutral-900 border border-neutral-700 rounded-l-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    <button type="submit" class="bg-violet-600 text-white font-bold py-2 px-6 rounded-r-md hover:bg-violet-700 transition-colors">Subscribe</button>
+                </form>
+            </div>
             <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
         </div>
     </footer>
 
     <!-- Article Modal -->
-    <div id="article-modal" class="article-modal fixed inset-0 z-[101] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0">
-        <div class="article-modal-content w-full max-w-3xl max-h-[90vh] bg-[#111] rounded-2xl flex flex-col overflow-hidden scale-95">
-            <div class="flex-shrink-0 flex justify-between items-center p-6 border-b border-neutral-800">
+    <div id="article-modal" class="fixed inset-0 bg-black/80 z-[101] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="article-modal-content bg-[#111] max-w-3xl w-full max-h-[90vh] rounded-xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300">
+            <div class="flex justify-between items-center p-6 border-b border-neutral-800">
                 <h2 id="modal-title" class="text-2xl font-bold">Article Title</h2>
-                <button id="close-modal-btn" class="text-2xl">&times;</button>
+                <button id="close-modal-btn" class="p-2 text-3xl">&times;</button>
             </div>
-            <div id="modal-content" class="p-8 overflow-y-auto prose prose-invert max-w-none">
-                <!-- Article content will be injected here -->
+            <div id="modal-content" class="p-8 text-neutral-300 flex-grow overflow-y-auto prose-invert prose-p:text-neutral-300 prose-headings:text-white">
+                <!-- Article content injected here -->
             </div>
-        </div>
-    </div>
-    
-    <!-- Article Content Templates -->
-    <div class="hidden">
-        <div id="workshop-content">
-            <h3>Our Vision for the Future</h3>
-            <p>Here at The Rolling Tray Co, the workshop is never quiet. We're driven by a passion for the craft and are constantly exploring new ways to elevate the tools of your ritual. We're excited to give you a glimpse into what's on the horizon.</p>
-            <h4>Expanding the Wood Selection</h4>
-            <p>While we love our core selection of Ash, Walnut, and Sapele, we're currently sourcing and testing a range of exotic and unique hardwoods. Imagine the deep, inky blacks of Wenge or the striking stripes of Zebrano. Our goal is to offer a palette of materials that allows you to find a tray that truly matches your personal style.</p>
-            <h4>New Designs & Accessories</h4>
-            <p>The classic tray design is our foundation, but we're refining new layouts and companion pieces. Get ready for:</p>
-            <ul>
-                <li><strong>Clipper Lighter Stands:</strong> Beautifully crafted stands to display your collection.</li>
-                <li><strong>Matching Ashtrays:</strong> Elegant, minimalist ashtrays designed to complement your tray.</li>
-                <li><strong>Multi-Level Trays:</strong> For the connoisseur who needs more space and organization.</li>
-            </ul>
-            <h4>The Bespoke Studio: Your Vision, Our Hands</h4>
-            <p>This is our most ambitious project yet. We will be launching a custom order service where you become the designer. Through an interactive tool on our website, you will be able to design your own tray layout, choose your wood, and even add custom engravings. It's the ultimate expression of personal style, and we cannot wait to bring your vision to life.</p>
-            <p>Stay tuned to The Journal for official launch dates and sneak peeks. The best is yet to come.</p>
-        </div>
-        <div id="care-content">
-            <h3>Keeping Your Tray in Prime Condition</h3>
-            <p>A hardwood rolling tray is an investment in your ritual. With a few simple steps, you can ensure it remains a beautiful and functional centerpiece for years, even decades, to come. Wood is a natural material, and a little care goes a long way.</p>
-            <h4>Regular Cleaning</h4>
-            <p>After each session, simply use a soft, dry cloth or a soft-bristled brush (like a clean paintbrush) to wipe away any loose material. For more stubborn residue, a slightly damp cloth is all you need. <strong>Never</strong> submerge your tray in water or use harsh chemical cleaners, as this will damage the wood and the finish.</p>
-            <h4>Conditioning the Wood (The Most Important Step)</h4>
-            <p>Every month or two, or whenever the wood starts to look a little dry or dull, it's time to re-condition it. This nourishes the wood and protects it from drying out.</p>
-            <ol>
-                <li>Apply a small amount of food-safe mineral oil or a specialized wood butter/wax to a clean, soft cloth.</li>
-                <li>Gently rub the conditioner into the wood, following the direction of the grain. Make sure to cover the entire surface, including the cutouts and edges.</li>
-                <li>Let it sit and soak in for at least 20-30 minutes (or even overnight).</li>
-                <li>With another clean cloth, buff off any excess. The wood will have a renewed, satin sheen.</li>
-            </ol>
-            <h4>What to Avoid</h4>
-            <ul>
-                <li><strong>Direct Sunlight:</strong> Prolonged exposure to sunlight can fade the wood's natural colour.</li>
-                <li><strong>Extreme Temperatures:</strong> Avoid leaving your tray near a radiator or in a cold car, as drastic temperature changes can cause the wood to warp or crack.</li>
-                <li><strong>Dishwashers:</strong> Absolutely never put your tray in a dishwasher.</li>
-            </ul>
-            <p>That's it! With minimal effort, your tray will not only perform flawlessly but will also develop a richer character and patina over time.</p>
         </div>
     </div>
 
-    <!-- Link to the single, shared JavaScript file -->
-    <script src="script.js" defer></script>
+     <!-- Notification Toast -->
+    <div id="notification-toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hidden">
+        Notification Message
+    </div>
+
+    <!-- Hidden templates for article content -->
+    <template id="care-guide-content">
+        <div class="prose lg:prose-lg max-w-none">
+            <h3>Keep it Conditioned</h3>
+            <p>Just like high-quality leather, premium wood needs occasional conditioning to prevent it from drying out. We recommend a food-safe mineral oil or a specialized wood wax (like beeswax). A little goes a long way.</p>
+            <ul>
+                <li>Apply a small amount of oil or wax to a clean, soft cloth.</li>
+                <li>Gently rub it into the wood, following the grain.</li>
+                <li>Let it sit for 15-20 minutes to allow the wood to absorb what it needs.</li>
+                <li>Buff off any excess with another clean, dry cloth.</li>
+            </ul>
+            <p>How often? It depends on your climate. If the wood starts to look a bit dull, it's time for a refresh. For most, once every couple of months is plenty.</p>
+            <h3>Cleaning Your Tray</h3>
+            <p>For day-to-day cleaning, a dry microfiber cloth is all you need to wipe away loose material. If you have a more stubborn spot:</p>
+            <ol>
+                <li>Lightly dampen a cloth with water. <strong>Never</strong> saturate the wood or submerge your tray.</li>
+                <li>Gently wipe the affected area.</li>
+                <li>Immediately dry the area thoroughly with a separate dry cloth.</li>
+            </ol>
+            <p><strong>Crucial:</strong> Avoid harsh chemical cleaners or abrasive sponges, as these can strip the wood's natural finish and cause damage.</p>
+        </div>
+    </template>
+    <template id="workshop-preview-content">
+        <div class="prose lg:prose-lg max-w-none">
+            <p>The workshop is buzzing with new energy, and we're excited to give you a preview of what we're dialing in for our next release. We've been listening to your feedback and focusing on expanding our ecosystem of refined tools.</p>
+            <h3>An Expanded Wood Library</h3>
+            <p>While our core selection remains, we are currently prototyping with some stunning new materials, including the deep, rich tones of Bog Oak and the striking patterns of Zebrawood. Each brings a completely different character to the setup.</p>
+            <h3>New Tools for the Ritual</h3>
+            <p>We're moving beyond the tray itself to create a cohesive system for the discerning user:</p>
+            <ul>
+                <li><strong>The Ashtray Redefined:</strong> We're crafting minimalist, heavy-bottomed ashtrays from matching hardwoods, designed to complement your tray perfectly.</li>
+                <li><strong>The Clipper Stand:</strong> A dedicated, weighted stand for your Clipper lighter. No more searching for it mid-session. It's a small detail that makes a huge difference.</li>
+            </ul>
+            <h3>The Bespoke Programme: Your Vision, Our Hands</h3>
+            <p>This is our most ambitious project yet. We are launching a custom order programme that will allow you to collaborate directly with us to design your perfect tray. You'll be able to choose your wood, specify your layout, and even add custom engravings. This is for those who want a truly one-of-a-kind centerpiece for their collection. Stay tuned for more details.</p>
+        </div>
+    </template>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // This script contains logic for the blog page modal, contact form, and newsletter signup.
+    
+    // --- Shopify Config for Newsletter ---
+    const shopifyConfig = {
+        domain: 'connoisseurcustoms.myshopify.com',
+        storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
+        apiVersion: '2024-07'
+    };
+
+    // --- General Helper Functions ---
+    function observeScrollAnimations() {
+        const scrollElements = document.querySelectorAll('.scroll-animate:not(.visible)');
+        if (!scrollElements.length) return;
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        scrollElements.forEach(el => observer.observe(el));
+    }
+
+    function showNotification(message, type = 'success') {
+        const toast = document.getElementById('notification-toast');
+        if (!toast) return;
+
+        toast.textContent = message;
+        toast.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600');
+        if (type === 'error') toast.classList.add('bg-red-600');
+        else if (type === 'info') toast.classList.add('bg-blue-600');
+        else toast.classList.add('bg-green-600');
+        
+        toast.classList.remove('hidden');
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 500);
+        }, 3000);
+    }
+    
+    // --- Blog Page Logic ---
+    function initBlogPage() {
+        const articleGrid = document.getElementById('article-grid');
+        const articleModal = document.getElementById('article-modal');
+        if (!articleGrid || !articleModal) return;
+
+        const modalTitle = articleModal.querySelector('#modal-title');
+        const modalContent = articleModal.querySelector('#modal-content');
+        const closeModalBtn = articleModal.querySelector('#close-modal-btn');
+
+        const openModal = (articleId, title) => {
+            const contentTemplate = document.getElementById(`${articleId}-content`);
+            if (!contentTemplate) { return; }
+            modalTitle.textContent = title;
+            modalContent.innerHTML = contentTemplate.innerHTML;
+            articleModal.classList.remove('hidden', 'opacity-0');
+            articleModal.querySelector('.article-modal-content').classList.remove('scale-95');
+        };
+
+        const closeModal = () => {
+            articleModal.classList.add('opacity-0');
+            articleModal.querySelector('.article-modal-content').classList.add('scale-95');
+            setTimeout(() => articleModal.classList.add('hidden'), 300);
+        };
+
+        articleGrid.addEventListener('click', (event) => {
+            const clickedCard = event.target.closest('.article-card');
+            if (!clickedCard) return;
+            openModal(clickedCard.dataset.article, clickedCard.querySelector('h2').textContent);
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        articleModal.addEventListener('click', (e) => (e.target === articleModal) && closeModal());
+    }
+
+    // --- Contact & Newsletter Logic ---
+    function initForms() {
+        const sendEmailBtn = document.getElementById('send-email-btn');
+        if (sendEmailBtn) {
+            sendEmailBtn.addEventListener('click', () => {
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const message = document.getElementById('contact-message').value;
+                const subject = `Message from ${name} via Website`;
+                const mailtoLink = `mailto:website@therollingtray.co?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}%0A%0AFrom:%20${name}%0AEmail:%20${email}`;
+                window.location.href = mailtoLink;
+            });
+        }
+
+        const newsletterForm = document.getElementById('newsletter-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('newsletter-email');
+                const email = emailInput.value;
+
+                const mutation = `
+                    mutation customerCreate($input: CustomerCreateInput!) {
+                        customerCreate(input: $input) {
+                            customer { id }
+                            customerUserErrors { code field message }
+                        }
+                    }`;
+                const variables = { input: { email: email, acceptsMarketing: true } };
+                
+                try {
+                    const endpoint = `https://${shopifyConfig.domain}/api/${shopifyConfig.apiVersion}/graphql.json`;
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': shopifyConfig.storefrontAccessToken },
+                        body: JSON.stringify({ query: mutation, variables })
+                    });
+                    const result = await response.json();
+
+                    if (result.data?.customerCreate?.customer) {
+                        showNotification('Thank you for subscribing!', 'success');
+                        emailInput.value = '';
+                    } else {
+                        const error = result.data?.customerCreate?.customerUserErrors[0];
+                        if (error && error.code === 'TAKEN') {
+                            showNotification('This email is already subscribed.', 'info');
+                        } else {
+                            showNotification('Could not subscribe. Please try again.', 'error');
+                        }
+                    }
+                } catch (err) {
+                    showNotification('An error occurred.', 'error');
+                }
+            });
+        }
+    }
+
+    // --- Initialize All Page Logic ---
+    initBlogPage();
+    initForms();
+    observeScrollAnimations();
+});
+</script>
 </body>
 </html>
 
