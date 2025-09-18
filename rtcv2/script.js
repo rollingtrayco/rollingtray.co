@@ -82,61 +82,85 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- Product Modal Logic ---
         async function openProductModal(handle) {
+            if (!handle) {
+                console.error("openProductModal called with no handle.");
+                return;
+            }
+            
+            // Show loading state
+            productModal.classList.remove('hidden');
+            productModal.querySelector('#modal-content-wrapper').classList.add('hidden');
+            productModal.querySelector('#modal-loading-state').classList.remove('hidden');
+
             const productQuery = `query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }`;
             const response = await shopifyFetch({ query: productQuery, variables: { handle } });
+
+            // Hide loading state
+            productModal.querySelector('#modal-loading-state').classList.add('hidden');
+            
             if (!response.data || !response.data.product) {
                 console.error("Failed to fetch product details for handle:", handle);
+                // Optionally show an error message in the modal
                 return;
             }
             
             const product = response.data.product;
+            
             productModal.querySelector('#modal-title').textContent = product.title;
             productModal.querySelector('#modal-price').textContent = `£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}`;
             productModal.querySelector('#modal-description').innerHTML = product.descriptionHtml;
             
             const addToCartBtn = productModal.querySelector('#modal-add-to-cart-btn');
-            addToCartBtn.dataset.variantId = product.variants.edges[0].node.id;
-            const inStock = product.variants.edges[0].node.availableForSale;
-            addToCartBtn.disabled = !inStock;
-            addToCartBtn.textContent = inStock ? 'Add to Cart' : 'Sold Out';
+            const variant = product.variants?.edges?.[0]?.node;
+
+            if (variant) {
+                addToCartBtn.dataset.variantId = variant.id;
+                addToCartBtn.disabled = !variant.availableForSale;
+                addToCartBtn.textContent = variant.availableForSale ? 'Add to Cart' : 'Sold Out';
+            } else {
+                addToCartBtn.disabled = true;
+                addToCartBtn.textContent = 'Unavailable';
+            }
             
-            // ** THE FIX IS HERE: Robust image handling **
             const mainImage = productModal.querySelector('#modal-main-image');
             const imageGallery = productModal.querySelector('#modal-image-gallery');
-            imageGallery.innerHTML = ''; // Clear previous images
+            imageGallery.innerHTML = ''; 
 
             if (product.images.edges.length > 0) {
-                // If there are images, display them
                 mainImage.src = product.images.edges[0].node.url;
-                mainImage.alt = product.images.edges[0].node.altText || product.title;
                 product.images.edges.forEach(edge => {
-                    imageGallery.innerHTML += `<img src="${edge.node.url}" alt="${edge.node.altText || product.title}" class="thumbnail w-16 h-16 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-violet-500">`;
+                    imageGallery.innerHTML += `<img src="${edge.node.url}" class="thumbnail w-16 h-16 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-violet-500">`;
                 });
             } else {
-                // If there are NO images, display a placeholder
-                const placeholderUrl = `https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(product.title)}`;
-                mainImage.src = placeholderUrl;
-                mainImage.alt = product.title;
+                mainImage.src = `https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(product.title)}`;
             }
 
-            productModal.classList.remove('hidden');
+            productModal.querySelector('#modal-content-wrapper').classList.remove('hidden');
         }
-        function closeProductModal() { productModal.classList.add('hidden'); }
+
+        function closeProductModal() { 
+            productModal.classList.add('hidden'); 
+        }
         
-        // --- Cart Logic ---
-        async function createCart() { /* (omitted for brevity - same as before) */ }
-        async function fetchCart() { /* (omitted for brevity - same as before) */ }
-        async function addToCart(variantId) { /* (omitted for brevity - same as before) */ }
-        async function removeFromCart(lineId) { /* (omitted for brevity - same as before) */ }
-        function updateCartUI(cartData) { /* (omitted for brevity - same as before) */ }
+        // --- Cart Logic (Omitted for brevity) ---
+        async function createCart(){const t=await shopifyFetch({query:`mutation{cartCreate{cart{...CartFragment}}}${cartFragment}`});if(t.data?.cartCreate?.cart){const a=t.data.cartCreate.cart;cartId=a.id,localStorage.setItem("shopifyCartId",cartId),updateCartUI(a)}}async function fetchCart(){const t=await shopifyFetch({query:`query($cartId:ID!){cart(id:$cartId){...CartFragment}}${cartFragment}`,variables:{cartId:cartId}});t.data?.cart?updateCartUI(t.data.cart):(localStorage.removeItem("shopifyCartId"),await createCart())}async function addToCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lines:[{merchandiseId:t,quantity:1}]}});a.data?.cartLinesAdd?.cart&&updateCartUI(a.data.cartLinesAdd.cart)}async function removeFromCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lineIds:[ID!]!){cartLinesRemove(cartId:$cartId,lineIds:$lineIds){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lineIds:[t]}});a.data?.cartLinesRemove?.cart&&updateCartUI(a.data.cartLinesRemove.cart)}function updateCartUI(t){if(!t)return;cart=t;let a=0;cartItemsContainer.innerHTML="",cart.lines?.edges?.length>0?(cart.lines.edges.forEach(({node:t})=>{a+=t.quantity,cartItemsContainer.innerHTML+=`<div class="flex items-center gap-4 mb-4"><img src="${t.merchandise?.image?.url||""}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${t.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${t.quantity}</p></div><p class="font-bold">\£${parseFloat(t.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${t.id}">&times;</button></div>`}),checkoutBtn.disabled=!1):(cartItemsContainer.innerHTML='<p class="text-neutral-500">Your cart is empty.</p>',checkoutBtn.disabled=!0),cartCount.textContent=a,cartSubtotalEl.textContent=`\£${parseFloat(cart.cost?.subtotalAmount?.amount||0).toFixed(2)}`}
+
 
         // --- Event Listeners ---
-        productGrid.addEventListener('click', e => e.target.closest('.product-card') && openProductModal(e.target.closest('.product-card').dataset.productHandle));
+        // ** THE FIX IS HERE: Using robust event delegation **
+        productGrid.addEventListener('click', (e) => {
+            const productCard = e.target.closest('.product-card');
+            if (productCard) {
+                openProductModal(productCard.dataset.productHandle);
+            }
+        });
+
         productModal.addEventListener('click', e => {
             if (e.target.id === 'close-modal-btn' || e.target === productModal) closeProductModal();
             if (e.target.classList.contains('thumbnail')) productModal.querySelector('#modal-main-image').src = e.target.src;
             if (e.target.id === 'modal-add-to-cart-btn') { addToCart(e.target.dataset.variantId); closeProductModal(); }
         });
+        
         cartButton.addEventListener('click', () => { cartPanel.classList.add('open'); cartOverlay.classList.remove('hidden'); });
         const closeCart = () => { cartPanel.classList.remove('open'); cartOverlay.classList.add('hidden'); };
         closeCartButton.addEventListener('click', closeCart);
@@ -146,7 +170,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- Animations ---
         const heroHeading = document.getElementById('hero-heading');
-        if (heroHeading) { /* (omitted for brevity - same as before) */ }
+        if (heroHeading) {
+             window.addEventListener('scroll', () => {
+               const scrollY = window.scrollY;
+               const scale = 1 + scrollY * 0.001;
+               const opacity = 1 - Math.min(scrollY / 400, 1);
+               heroHeading.style.transform = `scale(${scale})`;
+               heroHeading.style.opacity = opacity;
+            });
+        }
 
         // --- Final Init ---
         (async () => {
@@ -160,7 +192,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // =================================================================
     //   BLOG PAGE INITIALIZER
     // =================================================================
-    function initBlogpage() { /* (omitted for brevity - same as before) */ }
+    function initBlogpage() {
+        const articleGrid = document.getElementById('article-grid');
+        const articleModal = document.getElementById('article-modal');
+        if (!articleGrid || !articleModal) return;
+
+        const modalTitle = articleModal.querySelector('#modal-title');
+        const modalContent = articleModal.querySelector('#modal-content');
+        const closeModalBtn = articleModal.querySelector('#close-modal-btn');
+
+        const openModal = (articleId, title) => {
+            const contentTemplate = document.getElementById(`${articleId}-content`);
+            if (!contentTemplate) { console.error("Could not find content for article:", articleId); return; }
+            modalTitle.textContent = title;
+            modalContent.innerHTML = contentTemplate.innerHTML;
+            articleModal.classList.remove('hidden', 'opacity-0');
+            articleModal.querySelector('.article-modal-content').classList.remove('scale-95');
+        };
+
+        const closeModal = () => {
+            articleModal.classList.add('opacity-0');
+            articleModal.querySelector('.article-modal-content').classList.add('scale-95');
+            setTimeout(() => articleModal.classList.add('hidden'), 300);
+        };
+
+        articleGrid.addEventListener('click', (event) => {
+            const clickedCard = event.target.closest('.article-card');
+            if (!clickedCard) return;
+            openModal(clickedCard.dataset.article, clickedCard.querySelector('h2').textContent);
+        });
+
+        closeModalBtn.addEventListener('click', closeModal);
+        articleModal.addEventListener('click', (e) => (e.target === articleModal) && closeModal());
+        observeScrollAnimations();
+    }
 
     // =================================================================
     //   PAGE ROUTER
