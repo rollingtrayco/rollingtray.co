@@ -7,12 +7,11 @@
     <meta name="description" content="Updates from the workshop, musings on the craft, and a look at what's next for The Rolling Tray Co.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Link to the single, shared stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
 
-    <!-- Header (Consistent with homepage) -->
+    <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-lg bg-black/30">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.html" class="flex items-center space-x-3">
@@ -24,7 +23,6 @@
                 <a href="index.html#about" class="hover:text-violet-400 transition-colors">Our Story</a>
                 <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
             </nav>
-            <!-- Cart button can be added here, and will work with the shared script.js -->
         </div>
     </header>
 
@@ -44,6 +42,7 @@
         <!-- Article Grid -->
         <section class="pb-24">
             <div class="container mx-auto px-6">
+                <!-- THIS IS THE CRUCIAL FIX: Added id="article-grid" -->
                 <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Article 1 -->
                     <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="workshop">
@@ -63,7 +62,7 @@
         </section>
     </main>
 
-    <!-- Footer (Consistent with homepage) -->
+    <!-- Footer -->
     <footer class="py-12 border-t border-neutral-900">
         <div class="container mx-auto px-6 text-center">
             <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
@@ -128,5 +127,4 @@
     <script src="script.js" defer></script>
 </body>
 </html>
-
 
