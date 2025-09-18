@@ -1,14 +1,18 @@
+/* General Body and Typography */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #0a0a0a;
     color: #e5e5e5;
     overflow-x: hidden;
 }
+
 .gradient-text {
     background: linear-gradient(90deg, #a78bfa, #c4b5fd);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+/* Hero Section */
 .hero-section {
     height: 100vh;
     display: flex;
@@ -18,6 +22,7 @@ body {
     position: relative;
     overflow: hidden;
 }
+
 #particle-canvas {
     position: absolute;
     top: 0;
@@ -26,56 +31,125 @@ body {
     height: 100%;
     z-index: 0;
 }
+
 .hero-content {
     z-index: 1;
 }
+
+/* Animations and Transitions */
 .scroll-animate {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
+
 .scroll-animate.visible {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Interactive Cards */
 .product-card {
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s;
      cursor: pointer;
 }
+
 .product-card:hover {
     transform: translateY(-12px);
     box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
 }
+
 .product-card img {
     transition: transform 0.4s ease-in-out;
 }
+
 .product-card:hover img {
     transform: scale(1.05);
 }
+
 .feature-card {
     transition: transform 0.3s ease, border-color 0.3s ease;
 }
+
 .feature-card:hover {
     transform: translateY(-10px);
     border-color: #8b5cf6;
 }
+
+/* Cart Panel */
 .cart-panel {
     transform: translateX(100%);
     transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
 }
+
 .cart-panel.open {
     transform: translateX(0);
 }
+
 /* Product Modal Styles */
 .product-modal {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
+
 .product-modal-content {
     transition: transform 0.3s ease;
 }
+
 .product-modal.hidden {
     pointer-events: none;
 }
+
 .product-modal.hidden .product-modal-content {
     transform: scale(0.95);
 }
+
+/* Blog Page Specific Styles (previously blog-style.css) */
+.article-modal {
+    transition: opacity 0.3s ease;
+}
+
+.article-modal-content {
+    transition: transform 0.3s ease;
+}
+
+.article-modal.hidden {
+    pointer-events: none;
+}
+
+.article-modal.hidden .article-modal-content {
+    transform: scale(0.95);
+}
+
+.prose h3 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.prose h4 {
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.prose p, .prose ul, .prose ol {
+    margin-bottom: 1em;
+    line-height: 1.6;
+    color: #a3a3a3;
+}
+
+.prose ul, .prose ol {
+    padding-left: 1.5em;
+}
+
+.prose li {
+    margin-bottom: 0.5em;
+}
+
+.prose strong {
+    color: #e5e5e5;
+}
+
+
