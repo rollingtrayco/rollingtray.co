@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ** SECURITY: Content Security Policy ** -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' https: data:;
+        connect-src 'self' https://connoisseurcustoms.myshopify.com;">
+
     <title>The Rolling Tray Co - Premium Rolling Trays</title>
     <!-- SEO Meta Tags -->
     <meta name="description" content="Discover The Rolling Tray Co's collection of handcrafted hardwood rolling trays. Premium materials, functional design, and timeless style for the modern connoisseur.">
     
-    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,10 +29,93 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "The Rolling Tray Co",
-      "url": "https://therollingtray.co",
-      "logo": "https://therollingtray.co/logo.png" 
+      "url": "https://therollingtray.co"
     }
     </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+             background-image: linear-gradient(to right, #8b5cf6, #a78bfa);
+        }
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .hero-content {
+            z-index: 1;
+        }
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .product-card {
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s;
+        }
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+        }
+        .product-card img {
+            transition: transform 0.4s ease-in-out;
+        }
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+        .feature-card {
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: #8b5cf6;
+        }
+        .cart-panel {
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .cart-panel.open {
+            transform: translateX(0);
+        }
+        /* Prose styles for blog/product descriptions */
+        .prose-invert h3 { color: #fff; }
+        .prose-invert p, .prose-invert li { color: #d1d5db; }
+        .prose-invert ul > li::before { background-color: #a78bfa; }
+        /* Notification Toast */
+        .toast {
+            transform: translateY(120%);
+            transition: transform 0.5s ease-in-out;
+        }
+        .toast.show {
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body class="antialiased">
 
@@ -31,11 +124,12 @@
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-xl font-bold tracking-wider">The Rolling Tray Co</a>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="/#shop" class="hover:text-violet-400 transition-colors">Collection</a>
-                <a href="/#features" class="hover:text-violet-400 transition-colors">Features</a>
+                <a href="#shop" class="hover:text-violet-400 transition-colors">Collection</a>
+                <a href="#features" class="hover:text-violet-400 transition-colors">Features</a>
                 <a href="/blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
-                <a href="/#about" class="hover:text-violet-400 transition-colors">Our Story</a>
-                <a href="/#faq" class="hover:text-violet-400 transition-colors">FAQ</a>
+                <a href="#about" class="hover:text-violet-400 transition-colors">Our Story</a>
+                <a href="#contact" class="hover:text-violet-400 transition-colors">Contact</a>
+                <a href="#faq" class="hover:text-violet-400 transition-colors">FAQ</a>
             </nav>
             <button id="cart-button" class="relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
@@ -78,7 +172,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
                     <!-- Article Card 1 -->
                     <a href="/blog.html" class="block bg-[#111] rounded-xl overflow-hidden scroll-animate product-card">
-                        <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="Tray Care" class="w-full h-48 object-cover">
+                        <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="Tray Care" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-bold">The Art of Care</h3>
                             <p class="mt-2 text-neutral-400 text-sm">A simple guide to maintaining the beauty and longevity of your hardwood rolling tray.</p>
@@ -86,7 +180,7 @@
                     </a>
                     <!-- Article Card 2 -->
                     <a href="/blog.html" class="block bg-[#111] rounded-xl overflow-hidden scroll-animate product-card" style="transition-delay: 200ms;">
-                        <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Upcoming Products" class="w-full h-48 object-cover">
+                        <img loading="lazy" src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Upcoming Products" class="w-full h-48 object-cover">
                         <div class="p-6">
                             <h3 class="text-xl font-bold">From the Workshop</h3>
                             <p class="mt-2 text-neutral-400 text-sm">An exclusive look at the new designs, materials, and custom options coming soon.</p>
@@ -163,11 +257,48 @@
             </div>
         </section>
 
+        <!-- Contact Section -->
+        <section id="contact" class="py-24">
+            <div class="container mx-auto px-6 max-w-3xl text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 scroll-animate">Get in Touch</h2>
+                <p class="text-neutral-400 mb-8 max-w-xl mx-auto scroll-animate" style="transition-delay: 150ms;">Have a question, a custom request, or just want to talk shop? We'd love to hear from you.</p>
+                <div id="contact-form" class="bg-[#111] p-8 rounded-lg text-left scroll-animate" style="transition-delay: 300ms;">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="contact-name" class="block text-sm font-medium text-neutral-400 mb-2">Name</label>
+                            <input type="text" id="contact-name" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block text-sm font-medium text-neutral-400 mb-2">Email</label>
+                            <input type="email" id="contact-email" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="contact-message" class="block text-sm font-medium text-neutral-400 mb-2">Message</label>
+                        <textarea id="contact-message" rows="4" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></textarea>
+                    </div>
+                    <a id="send-email-btn" class="w-full text-center btn-gradient text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 cursor-pointer flex items-center justify-center gap-2">
+                        <span>Send Message</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
-    <footer class="py-12 border-t border-neutral-900">
+    <footer class="py-16 border-t border-neutral-900">
         <div class="container mx-auto px-6 text-center">
+             <!-- Newsletter Form -->
+            <div class="max-w-md mx-auto mb-12">
+                <h3 class="text-xl font-bold mb-2">Join the Inner Circle</h3>
+                <p class="text-neutral-400 mb-4 text-sm">Be the first to know about new products, limited runs, and exclusive offers.</p>
+                <form id="newsletter-form" class="flex">
+                    <input type="email" id="newsletter-email" placeholder="Enter your email" required class="w-full bg-neutral-900 border border-neutral-700 rounded-l-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
+                    <button type="submit" class="bg-violet-600 text-white font-bold py-2 px-6 rounded-r-md hover:bg-violet-700 transition-colors">Subscribe</button>
+                </form>
+            </div>
             <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
         </div>
     </footer>
@@ -196,9 +327,6 @@
     <!-- Product Modal -->
     <div id="product-modal" class="fixed inset-0 bg-black/80 z-[101] flex items-center justify-center p-4 hidden">
         <div class="bg-[#111] max-w-4xl w-full max-h-[90vh] rounded-xl overflow-hidden flex flex-col md:flex-row">
-            <!-- Loading State -->
-            <div id="modal-loading-state" class="w-full p-8 text-center hidden"><p>Loading details...</p></div>
-            <!-- Content -->
             <div id="modal-content-wrapper" class="w-full flex flex-col md:flex-row">
                 <div class="w-full md:w-1/2 p-4">
                     <img id="modal-main-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-lg aspect-square">
@@ -207,18 +335,126 @@
                 <div class="w-full md:w-1/2 p-6 flex flex-col">
                     <div class="flex justify-between items-start">
                         <h2 id="modal-title" class="text-3xl font-bold">Product Title</h2>
-                        <button id="close-modal-btn" class="p-2 -mr-2">&times;</button>
+                        <button id="close-modal-btn" class="p-2 text-3xl">&times;</button>
                     </div>
                     <p id="modal-price" class="text-violet-400 text-2xl font-medium my-2">£0.00</p>
-                    <div id="modal-description" class="text-neutral-400 flex-grow overflow-y-auto pr-2"></div>
+                    <div id="modal-description" class="text-neutral-400 flex-grow overflow-y-auto pr-2 prose-invert"></div>
                     <button id="modal-add-to-cart-btn" class="mt-4 w-full bg-violet-600 text-white font-bold py-3 rounded-lg">Add to Cart</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ** UPDATED NOTIFICATION TOAST ** -->
+    <div id="notification-toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hidden">
+        Notification Message
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // =================================================================
+    //   APP - A single object to hold the entire application's logic
+    // =================================================================
+    const App = {
+        // --- CONFIGURATION ---
+        shopifyConfig: {
+            domain: 'connoisseurcustoms.myshopify.com',
+            storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
+            apiVersion: '2024-07'
+        },
+
+        // --- STATE ---
+        state: {
+            cart: null,
+            products: [],
+        },
+
+        // --- DOM ELEMENTS ---
+        elements: {
+            productGrid: document.getElementById('product-grid'),
+            productModal: document.getElementById('product-modal'),
+            cartButton: document.getElementById('cart-button'),
+            cartPanel: document.getElementById('cart-panel'),
+            cartOverlay: document.getElementById('cart-overlay'),
+            cartItemsContainer: document.getElementById('cart-items'),
+            cartCount: document.getElementById('cart-count'),
+            cartSubtotal: document.getElementById('cart-subtotal'),
+            checkoutBtn: document.getElementById('checkout-btn'),
+            particleCanvas: document.getElementById('particle-canvas'),
+            heroHeading: document.getElementById('hero-heading'),
+            contactForm: document.getElementById('contact-form'),
+            newsletterForm: document.getElementById('newsletter-form'),
+            notificationToast: document.getElementById('notification-toast'),
+        },
+        
+        // --- SHOPIFY API (Omitted for brevity - no changes) ---
+        async shopifyFetch({ query, variables }) { try { const e=`https://${this.shopifyConfig.domain}/api/${this.shopifyConfig.apiVersion}/graphql.json`,t=await fetch(e,{method:"POST",headers:{"Content-Type":"application/json","X-Shopify-Storefront-Access-Token":this.shopifyConfig.storefrontAccessToken},body:JSON.stringify({query:query,variables:variables})});if(!t.ok){const o=await t.text();throw new Error(`Shopify API Error: ${t.statusText} - ${o}`)}return t.json() } catch(e) { return console.error("Error in shopifyFetch:",e),{errors:[{message:e.message}]}} },
+        cartFragment: `fragment CartFragment on Cart { id checkoutUrl lines(first: 100) { edges { node { id quantity merchandise { ... on ProductVariant { id image { url } price { amount } product { title } } } } } } cost { subtotalAmount { amount } } }`,
+
+        // --- RENDERING FUNCTIONS (Omitted for brevity - no changes) ---
+        renderProducts() { if(!this.elements.productGrid)return;this.elements.productGrid.innerHTML="",this.state.products.forEach((e=>{const t=e.images?.edges?.[0]?.node?.url;this.elements.productGrid.innerHTML+=`<div class="product-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-product-handle="${e.handle}"><div class="overflow-hidden"><img loading="lazy" src="${t||"https://placehold.co/600x400/111/FFF?text=Image"}" alt="${e.title}" class="w-full h-64 object-cover"></div><div class="p-6"><h3 class="text-2xl font-bold">${e.title}</h3><p class="text-violet-400 text-xl font-medium mt-1">£${parseFloat(e.priceRange.minVariantPrice.amount).toFixed(2)}</p></div></div>`})),this.observeScrollAnimations() },
+        renderCart() { if(!this.state.cart)return;let e=0;this.elements.cartItemsContainer.innerHTML="",this.state.cart.lines?.edges?.length>0?(this.state.cart.lines.edges.forEach(({node:t})=>{e+=t.quantity,this.elements.cartItemsContainer.innerHTML+=`<div class="flex items-center gap-4 mb-4"><img src="${t.merchandise?.image?.url||""}" alt="${t.merchandise?.product?.title||"Product"}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${t.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${t.quantity}</p></div><p class="font-bold">£${parseFloat(t.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${t.id}">&times;</button></div>`}),this.elements.checkoutBtn.disabled=!1):(this.elements.cartItemsContainer.innerHTML='<p class="text-neutral-500">Your cart is empty.</p>',this.elements.checkoutBtn.disabled=!0),this.elements.cartCount.textContent=e,this.elements.cartSubtotal.textContent=`£${parseFloat(this.state.cart.cost?.subtotalAmount?.amount||0).toFixed(2)}`},
+
+        // --- DATA FETCHING & STATE MUTATIONS (Omitted for brevity - no changes) ---
+        async fetchProducts() { const e=`query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;const t=await this.shopifyFetch({query:e});t.data&&t.data.products?(this.state.products=t.data.products.edges.map((e=>e.node)),this.renderProducts()):(console.error("Failed to fetch products:",t.errors),this.elements.productGrid.innerHTML='<div class="col-span-full text-center text-red-400">Could not load products. Please check the console.</div>')},
+        async fetchCart() { const e=localStorage.getItem("shopifyCartId");if(!e)return this.createCart();const t=await this.shopifyFetch({query:`query ($cartId: ID!) { cart(id: $cartId) { ...CartFragment } } ${this.cartFragment}`,variables:{cartId:e}});t.data?.cart?this.state.cart=t.data.cart:(localStorage.removeItem("shopifyCartId"),this.createCart())},
+        async createCart() { const e=await this.shopifyFetch({query:`mutation { cartCreate { cart { ...CartFragment } } } ${this.cartFragment}`});e.data?.cartCreate?.cart&&(this.state.cart=e.data.cartCreate.cart,localStorage.setItem("shopifyCartId",this.state.cart.id))},
+        async addToCart(e) { const t=await this.shopifyFetch({query:`mutation ($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ...CartFragment } } } ${this.cartFragment}`,variables:{cartId:this.state.cart.id,lines:[{merchandiseId:e,quantity:1}]}});t.data?.cartLinesAdd?.cart&&(this.state.cart=t.data.cartLinesAdd.cart,this.renderCart())},
+        async removeFromCart(e) { const t=await this.shopifyFetch({query:`mutation ($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ...CartFragment } } } ${this.cartFragment}`,variables:{cartId:this.state.cart.id,lineIds:[e]}});t.data?.cartLinesRemove?.cart&&(this.state.cart=t.data.cartLinesRemove.cart,this.renderCart())},
+        async subscribeToNewsletter(e){const t=`\n                mutation customerCreate($input: CustomerCreateInput!) {\n                    customerCreate(input: $input) {\n                        customer { id }\n                        customerUserErrors { code field message }\n                    }\n                }`,o={input:{email:e,acceptsMarketing:!0}},s=await this.shopifyFetch({query:t,variables:o});if(s.data?.customerCreate?.customer)return this.showNotification("Thank you for subscribing!","success"),!0;{const a=s.data?.customerCreate?.customerUserErrors[0];return a&&"TAKEN"===a.code?this.showNotification("This email is already subscribed.","info"):this.showNotification("Could not subscribe. Please try again.","error"),console.error("Newsletter subscription error:",s.errors||s.data?.customerCreate?.customerUserErrors),!1}},
+
+        // --- UI LOGIC (Omitted for brevity - no changes) ---
+        async openProductModal(handle) { if(!handle)return;this.elements.productModal.classList.remove("hidden");const e=`query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }`;const t=await this.shopifyFetch({query:e,variables:{handle:handle}});if(!t.data||!t.data.product)return;const o=t.data.product;const a=document.getElementById("dynamic-product-schema");a&&a.remove();const s={"@context":"https://schema.org","@type":"Product",name:o.title,image:o.images?.edges?.[0]?.node?.url||"",description:o.descriptionHtml.replace(/<[^>]*>?/gm,""),sku:o.variants?.edges?.[0]?.node?.id,offers:{"@type":"Offer",url:`${window.location.origin}/#${o.handle}`,priceCurrency:o.priceRange.minVariantPrice.currencyCode,price:o.priceRange.minVariantPrice.amount,availability:o.variants?.edges?.[0]?.node?.availableForSale?"https://schema.org/InStock":"https://schema.org/OutOfStock",seller:{"@type":"Organization",name:"The Rolling Tray Co"}}};const i=document.createElement("script");i.id="dynamic-product-schema",i.type="application/ld+json",i.text=JSON.stringify(s),document.head.appendChild(i),this.elements.productModal.querySelector("#modal-title").textContent=o.title,this.elements.productModal.querySelector("#modal-price").textContent=`£${parseFloat(o.priceRange.minVariantPrice.amount).toFixed(2)}`,this.elements.productModal.querySelector("#modal-description").innerHTML=o.descriptionHtml;const n=this.elements.productModal.querySelector("#modal-add-to-cart-btn"),l=o.variants?.edges?.[0]?.node;l?(n.dataset.variantId=l.id,n.disabled=!l.availableForSale,n.textContent=l.availableForSale?"Add to Cart":"Sold Out"):(n.disabled=!0,n.textContent="Unavailable");const r=this.elements.productModal.querySelector("#modal-main-image"),d=this.elements.productModal.querySelector("#modal-image-gallery");if(d.innerHTML="",o.images.edges.length>0){r.src=o.images.edges[0].node.url,o.images.edges.forEach((e=>{d.innerHTML+=`<img src="${e.node.url}" class="thumbnail w-16 h-16 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-violet-500">`}))}else r.src=`https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(o.title)}`},
+        
+        // --- ANIMATIONS & HELPERS ---
+        observeScrollAnimations() { /* (Omitted for brevity - no changes) */ const e=document.querySelectorAll(".scroll-animate:not(.visible)");if(!e.length)return;const t=new IntersectionObserver(((e,t)=>{e.forEach((e=>{e.isIntersecting&&(e.target.classList.add("visible"),t.unobserve(e.target))}))}),{threshold:.1});e.forEach((e=>{t.observe(e)}))},
+        initAnimations() { /* (Omitted for brevity - no changes) */ if(this.elements.heroHeading){window.addEventListener("scroll",(()=>{const e=window.scrollY,t=1+e*.001,o=1-Math.min(e/400,1);this.elements.heroHeading.style.transform=`scale(${t})`,this.elements.heroHeading.style.opacity=o}))}const e=this.elements.particleCanvas;if(e){const t=e.getContext("2d");e.width=window.innerWidth,e.height=window.innerHeight;let o=[];const a=50;class s{constructor(){this.x=Math.random()*e.width,this.y=Math.random()*e.height,this.size=1.5*Math.random()+.5,this.speedX=1*Math.random()-.5,this.speedY=1*Math.random()-.5,this.color=`rgba(139, 92, 246, ${Math.random()})`}update(){this.x+=this.speedX,this.y+=this.speedY,(this.x>e.width||this.x<0)&&(this.speedX*=-1),(this.y>e.height||this.y<0)&&(this.speedY*=-1)}draw(){t.fillStyle=this.color,t.beginPath(),t.arc(this.x,this.y,this.size,0,2*Math.PI),t.fill()}}const i=()=>{for(let e=0;e<a;e++)o.push(new s)};const n=()=>{t.clearRect(0,0,e.width,e.height),o.forEach((e=>{e.update(),e.draw()})),requestAnimationFrame(n)};i(),n()}},
+        // ** UPDATED showNotification function **
+        showNotification(message, type = 'success') {
+            const toast = this.elements.notificationToast;
+            if (!toast) return;
+
+            toast.textContent = message;
+            toast.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600');
+
+            if (type === 'error') toast.classList.add('bg-red-600');
+            else if (type === 'info') toast.classList.add('bg-blue-600');
+            else toast.classList.add('bg-green-600');
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10); 
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 500);
+            }, 3000);
+        },
+
+        // --- EVENT BINDING (Omitted for brevity - no changes) ---
+        bindEvents() { this.elements.productGrid.addEventListener("click",(e=>{const t=e.target.closest(".product-card");t&&this.openProductModal(t.dataset.productHandle)})),this.elements.productModal.addEventListener("click",(e=>{if("close-modal-btn"===e.target.id||e.target===this.elements.productModal)this.elements.productModal.classList.add("hidden");else if(e.target.classList.contains("thumbnail"))this.elements.productModal.querySelector("#modal-main-image").src=e.target.src;else if("modal-add-to-cart-btn"===e.target.id){this.addToCart(e.target.dataset.variantId);this.elements.productModal.classList.add("hidden")}})),this.elements.cartButton.addEventListener("click",(()=>{this.elements.cartPanel.classList.add("open"),this.elements.cartOverlay.classList.remove("hidden")}));const e=()=>{this.elements.cartPanel.classList.remove("open"),this.elements.cartOverlay.classList.add("hidden")};this.elements.cartPanel.querySelector("#close-cart-btn").addEventListener("click",e),this.elements.cartOverlay.addEventListener("click",e),this.elements.cartItemsContainer.addEventListener("click",(e=>{const t=e.target.closest(".remove-from-cart-btn");t&&this.removeFromCart(t.dataset.lineId)})),this.elements.checkoutBtn.addEventListener("click",(()=>{this.state.cart&&this.state.cart.checkoutUrl?window.location.href=this.state.cart.checkoutUrl:console.error("Checkout button clicked, but checkoutUrl is not available on the cart state. This may be due to API permissions in your Shopify Headless channel.")}));const t=document.getElementById("send-email-btn");t&&t.addEventListener("click",(()=>{const e=document.getElementById("contact-name").value,t=document.getElementById("contact-email").value,o=document.getElementById("contact-message").value,s=`Message from ${e} via Website`,a=`mailto:website@therollingtray.co?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(o)}%0A%0AFrom:%20${e}%0AEmail:%20${t}`;window.location.href=a})),this.elements.newsletterForm&&this.elements.newsletterForm.addEventListener("submit",(async e=>{e.preventDefault();const t=document.getElementById("newsletter-email"),o=t.value,s=await this.subscribeToNewsletter(o);s&&(t.value="")}))},
+
+        // --- INITIALIZATION ---
+        async init() {
+            this.bindEvents();
+            this.initAnimations();
+            try {
+                await this.fetchCart();
+                this.renderCart();
+                await this.fetchProducts();
+            } catch (error) {
+                console.error("Initialization failed:", error);
+            }
+        }
+    };
     
-    <!-- ** SCRIPT MOVED HERE FOR RELIABILITY ** -->
-    <script src="script.js"></script>
+    // Start the application
+    App.init();
+});
+</script>
 
 </body>
 </html>
