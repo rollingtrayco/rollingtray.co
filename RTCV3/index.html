@@ -288,53 +288,43 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
     // =================================================================
-    //   GLOBAL & UTILITY FUNCTIONS
+    //   APP - A single object to hold the entire application's logic
     // =================================================================
-    
-    function observeScrollAnimations() {
-        const scrollElements = document.querySelectorAll('.scroll-animate:not(.visible)');
-        if (!scrollElements.length) return;
-        
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        scrollElements.forEach(el => observer.observe(el));
-    }
-
-    // =================================================================
-    //   HOMEPAGE INITIALIZER
-    // =================================================================
-    function initHomepage() {
-        const shopifyConfig = {
+    const App = {
+        // --- CONFIGURATION ---
+        shopifyConfig: {
             domain: 'connoisseurcustoms.myshopify.com',
             storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
-        };
+        },
 
-        const productGrid = document.getElementById('product-grid');
-        const productModal = document.getElementById('product-modal');
-        const cartButton = document.getElementById('cart-button');
-        const closeCartButton = document.getElementById('close-cart-btn');
-        const cartPanel = document.getElementById('cart-panel');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const cartCount = document.getElementById('cart-count');
-        const cartItemsContainer = document.getElementById('cart-items');
-        const cartSubtotalEl = document.getElementById('cart-subtotal');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        let cartId = localStorage.getItem('shopifyCartId');
-        let checkoutUrl = ''; // ** NEW: Dedicated variable for checkout URL
+        // --- STATE ---
+        state: {
+            cart: null,
+            products: [],
+        },
 
-        async function shopifyFetch({ query, variables }) {
+        // --- DOM ELEMENTS ---
+        elements: {
+            productGrid: document.getElementById('product-grid'),
+            productModal: document.getElementById('product-modal'),
+            cartButton: document.getElementById('cart-button'),
+            cartPanel: document.getElementById('cart-panel'),
+            cartOverlay: document.getElementById('cart-overlay'),
+            cartItemsContainer: document.getElementById('cart-items'),
+            cartCount: document.getElementById('cart-count'),
+            cartSubtotal: document.getElementById('cart-subtotal'),
+            checkoutBtn: document.getElementById('checkout-btn'),
+            particleCanvas: document.getElementById('particle-canvas'),
+            heroHeading: document.getElementById('hero-heading'),
+        },
+        
+        // --- SHOPIFY API ---
+        async shopifyFetch({ query, variables }) {
             try {
-                const response = await fetch(`https://${shopifyConfig.domain}/api/2024-04/graphql.json`, {
+                const response = await fetch(`https://${this.shopifyConfig.domain}/api/2024-04/graphql.json`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': shopifyConfig.storefrontAccessToken },
+                    headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': this.shopifyConfig.storefrontAccessToken },
                     body: JSON.stringify({ query, variables }),
                 });
                 if (!response.ok) throw new Error(`Shopify API Error: ${response.statusText}`);
@@ -343,177 +333,159 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error in shopifyFetch:", error);
                 return { errors: [{ message: error.message }] };
             }
-        }
-        
-        const cartFragment = `fragment CartFragment on Cart { id checkoutUrl lines(first: 100) { edges { node { id quantity merchandise { ... on ProductVariant { id image { url } price { amount } product { title } } } } } } cost { subtotalAmount { amount } } }`;
+        },
+        cartFragment: `fragment CartFragment on Cart { id checkoutUrl lines(first: 100) { edges { node { id quantity merchandise { ... on ProductVariant { id image { url } price { amount } product { title } } } } } } cost { subtotalAmount { amount } } }`,
 
-        async function fetchProducts() {
-            const productsQuery = `query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;
-            const response = await shopifyFetch({ query: productsQuery });
-            if (response.data && response.data.products) {
-                renderProducts(response.data.products.edges);
-            } else {
-                console.error("Failed to fetch products:", response.errors);
-                productGrid.innerHTML = '<div class="col-span-full text-center text-red-400">Could not load products. Please check the console for errors.</div>';
-            }
-        }
-
-        function renderProducts(products) {
-            productGrid.innerHTML = '';
-            products.forEach(({ node: product }) => {
+        // --- RENDERING FUNCTIONS ---
+        renderProducts() {
+            if (!this.elements.productGrid) return;
+            this.elements.productGrid.innerHTML = '';
+            this.state.products.forEach(product => {
                 const imageUrl = product.images?.edges?.[0]?.node?.url;
-                productGrid.innerHTML += `<div class="product-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-product-handle="${product.handle}"><div class="overflow-hidden"><img src="${imageUrl || 'https://placehold.co/600x400/111/FFF?text=Image'}" alt="${product.title}" class="w-full h-64 object-cover"></div><div class="p-6"><h3 class="text-2xl font-bold">${product.title}</h3><p class="text-violet-400 text-xl font-medium mt-1">£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p></div></div>`;
+                this.elements.productGrid.innerHTML += `<div class="product-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-product-handle="${product.handle}"><div class="overflow-hidden"><img src="${imageUrl || 'https://placehold.co/600x400/111/FFF?text=Image'}" alt="${product.title}" class="w-full h-64 object-cover"></div><div class="p-6"><h3 class="text-2xl font-bold">${product.title}</h3><p class="text-violet-400 text-xl font-medium mt-1">£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p></div></div>`;
             });
-            observeScrollAnimations();
-        }
+            this.observeScrollAnimations();
+        },
         
-        async function openProductModal(handle) {
-             if (!handle) { return; }
-            productModal.classList.remove('hidden');
-            const productQuery = `query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }`;
-            const response = await shopifyFetch({ query: productQuery, variables: { handle } });
-            if (!response.data || !response.data.product) { return; }
-            const product = response.data.product;
-            productModal.querySelector('#modal-title').textContent = product.title;
-            productModal.querySelector('#modal-price').textContent = `£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}`;
-            productModal.querySelector('#modal-description').innerHTML = product.descriptionHtml;
-            const addToCartBtn = productModal.querySelector('#modal-add-to-cart-btn');
-            const variant = product.variants?.edges?.[0]?.node;
-            if (variant) {
-                addToCartBtn.dataset.variantId = variant.id;
-                addToCartBtn.disabled = !variant.availableForSale;
-                addToCartBtn.textContent = variant.availableForSale ? 'Add to Cart' : 'Sold Out';
-            } else {
-                addToCartBtn.disabled = true;
-                addToCartBtn.textContent = 'Unavailable';
-            }
-            const mainImage = productModal.querySelector('#modal-main-image');
-            const imageGallery = productModal.querySelector('#modal-image-gallery');
-            imageGallery.innerHTML = ''; 
-            if (product.images.edges.length > 0) {
-                mainImage.src = product.images.edges[0].node.url;
-                product.images.edges.forEach(edge => {
-                    imageGallery.innerHTML += `<img src="${edge.node.url}" class="thumbnail w-16 h-16 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-violet-500">`;
-                });
-            } else {
-                mainImage.src = `https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(product.title)}`;
-            }
-        }
-
-        function closeProductModal() { productModal.classList.add('hidden'); }
-        
-        function updateCartUI(cartData) {
-            if (!cartData) return;
-            
-            checkoutUrl = cartData.checkoutUrl; // ** THE FIX IS HERE **
+        renderCart() {
+            if (!this.state.cart) return;
             
             let totalQuantity = 0;
-            cartItemsContainer.innerHTML = '';
-            if (cartData.lines?.edges?.length > 0) {
-                cartData.lines.edges.forEach(({ node }) => {
+            this.elements.cartItemsContainer.innerHTML = '';
+
+            if (this.state.cart.lines?.edges?.length > 0) {
+                this.state.cart.lines.edges.forEach(({ node }) => {
                     totalQuantity += node.quantity;
-                    cartItemsContainer.innerHTML += `<div class="flex items-center gap-4 mb-4"><img src="${node.merchandise?.image?.url || ''}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${node.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${node.quantity}</p></div><p class="font-bold">£${parseFloat(node.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${node.id}">&times;</button></div>`;
+                    this.elements.cartItemsContainer.innerHTML += `<div class="flex items-center gap-4 mb-4"><img src="${node.merchandise?.image?.url || ''}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${node.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${node.quantity}</p></div><p class="font-bold">£${parseFloat(node.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${node.id}">&times;</button></div>`;
                 });
-                checkoutBtn.disabled = false;
+                this.elements.checkoutBtn.disabled = false;
             } else {
-                cartItemsContainer.innerHTML = '<p class="text-neutral-500">Your cart is empty.</p>';
-                checkoutBtn.disabled = true;
+                this.elements.cartItemsContainer.innerHTML = '<p class="text-neutral-500">Your cart is empty.</p>';
+                this.elements.checkoutBtn.disabled = true;
             }
-            cartCount.textContent = totalQuantity;
-            cartSubtotalEl.textContent = `£${parseFloat(cartData.cost?.subtotalAmount?.amount || 0).toFixed(2)}`;
-        }
+            this.elements.cartCount.textContent = totalQuantity;
+            this.elements.cartSubtotal.textContent = `£${parseFloat(this.state.cart.cost?.subtotalAmount?.amount || 0).toFixed(2)}`;
+        },
 
-        async function createCart(){const t=await shopifyFetch({query:`mutation{cartCreate{cart{...CartFragment}}}${cartFragment}`});if(t.data?.cartCreate?.cart){const a=t.data.cartCreate.cart;cartId=a.id,localStorage.setItem("shopifyCartId",cartId),updateCartUI(a)}}async function fetchCart(){const t=await shopifyFetch({query:`query($cartId:ID!){cart(id:$cartId){...CartFragment}}${cartFragment}`,variables:{cartId:cartId}});t.data?.cart?updateCartUI(t.data.cart):(localStorage.removeItem("shopifyCartId"),await createCart())}async function addToCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lines:[CartLineInput!]!){cartLinesAdd(cartId:$cartId,lines:$lines){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lines:[{merchandiseId:t,quantity:1}]}});a.data?.cartLinesAdd?.cart&&updateCartUI(a.data.cartLinesAdd.cart)}async function removeFromCart(t){const a=await shopifyFetch({query:`mutation($cartId:ID!,$lineIds:[ID!]!){cartLinesRemove(cartId:$cartId,lineIds:$lineIds){cart{...CartFragment}}}${cartFragment}`,variables:{cartId:cartId,lineIds:[t]}});a.data?.cartLinesRemove?.cart&&updateCartUI(a.data.cartLinesRemove.cart)}
-        
-        productGrid.addEventListener('click', (e) => {
-            const productCard = e.target.closest('.product-card');
-            if (productCard) {
-                openProductModal(productCard.dataset.productHandle);
-            }
-        });
-        productModal.addEventListener('click', e => {
-            if (e.target.id === 'close-modal-btn' || e.target === productModal) closeProductModal();
-            if (e.target.classList.contains('thumbnail')) productModal.querySelector('#modal-main-image').src = e.target.src;
-            if (e.target.id === 'modal-add-to-cart-btn') { addToCart(e.target.dataset.variantId); closeProductModal(); }
-        });
-        cartButton.addEventListener('click', () => { cartPanel.classList.add('open'); cartOverlay.classList.remove('hidden'); });
-        const closeCart = () => { cartPanel.classList.remove('open'); cartOverlay.classList.add('hidden'); };
-        closeCartButton.addEventListener('click', closeCart);
-        cartOverlay.addEventListener('click', closeCart);
-        cartItemsContainer.addEventListener('click', e => e.target.closest('.remove-from-cart-btn') && removeFromCart(e.target.closest('.remove-from-cart-btn').dataset.lineId));
-        
-        checkoutBtn.addEventListener('click', () => {
-            if (checkoutUrl) { // ** THE FIX IS HERE **
-                window.location.href = checkoutUrl;
+        // --- DATA FETCHING & STATE MUTATIONS ---
+        async fetchProducts() {
+            const productsQuery = `query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;
+            const response = await this.shopifyFetch({ query: productsQuery });
+            if (response.data && response.data.products) {
+                this.state.products = response.data.products.edges.map(e => e.node);
+                this.renderProducts();
             } else {
-                console.error('Checkout Error: checkoutUrl is not available.');
+                console.error("Failed to fetch products:", response.errors);
+                this.elements.productGrid.innerHTML = '<div class="col-span-full text-center text-red-400">Could not load products. Please check the console.</div>';
             }
-        });
-        
-        const heroHeading = document.getElementById('hero-heading');
-        if (heroHeading) {
-             window.addEventListener('scroll', () => {
-               const scrollY = window.scrollY;
-               const scale = 1 + scrollY * 0.001;
-               const opacity = 1 - Math.min(scrollY / 400, 1);
-               heroHeading.style.transform = `scale(${scale})`;
-               heroHeading.style.opacity = opacity;
-            });
-        }
-        
-        const canvas = document.getElementById('particle-canvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            let particles = [];
-            const particleCount = 50;
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.size = Math.random() * 1.5 + 0.5;
-                    this.speedX = Math.random() * 1 - 0.5;
-                    this.speedY = Math.random() * 1 - 0.5;
-                    this.color = `rgba(139, 92, 246, ${Math.random()})`;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-                    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-                }
-                draw() {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+        },
+        async fetchCart() {
+            const cartId = localStorage.getItem('shopifyCartId');
+            if (!cartId) {
+                return this.createCart(); // Return the promise
             }
-            function initParticles() { for (let i = 0; i < particleCount; i++) particles.push(new Particle()); }
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particles.length; i++) {
-                    particles[i].update();
-                    particles[i].draw();
-                }
-                requestAnimationFrame(animateParticles);
+            const response = await this.shopifyFetch({ query: `query ($cartId: ID!) { cart(id: $cartId) { ...CartFragment } } ${this.cartFragment}`, variables: { cartId } });
+            if (response.data?.cart) {
+                this.state.cart = response.data.cart;
+                this.renderCart();
+            } else {
+                localStorage.removeItem('shopifyCartId');
+                return this.createCart(); // Return the promise
             }
-            initParticles();
-            animateParticles();
-        }
+        },
+        async createCart() {
+            const response = await this.shopifyFetch({ query: `mutation { cartCreate { cart { ...CartFragment } } } ${this.cartFragment}` });
+            if (response.data?.cartCreate?.cart) {
+                this.state.cart = response.data.cartCreate.cart;
+                localStorage.setItem('shopifyCartId', this.state.cart.id);
+                this.renderCart();
+            }
+        },
+        async addToCart(variantId) {
+            const response = await this.shopifyFetch({ query: `mutation ($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ...CartFragment } } } ${this.cartFragment}`, variables: { cartId: this.state.cart.id, lines: [{ merchandiseId: variantId, quantity: 1 }] } });
+            if (response.data?.cartLinesAdd?.cart) {
+                this.state.cart = response.data.cartLinesAdd.cart;
+                this.renderCart();
+            }
+        },
+        async removeFromCart(lineId) {
+            const response = await this.shopifyFetch({ query: `mutation ($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ...CartFragment } } } ${this.cartFragment}`, variables: { cartId: this.state.cart.id, lineIds: [lineId] } });
+            if (response.data?.cartLinesRemove?.cart) {
+                this.state.cart = response.data.cartLinesRemove.cart;
+                this.renderCart();
+            }
+        },
 
-        (async () => {
-            if (cartId) await fetchCart();
-            else await createCart();
-            await fetchProducts();
-            observeScrollAnimations();
-        })();
-    }
+        // --- UI LOGIC ---
+        async openProductModal(handle) { /* (Omitted for brevity - unchanged) */ if(!handle)return;this.elements.productModal.classList.remove("hidden");const e=await this.shopifyFetch({query:"query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }",variables:{handle:handle}});if(!e.data||!e.data.product)return;const t=e.data.product;this.elements.productModal.querySelector("#modal-title").textContent=t.title,this.elements.productModal.querySelector("#modal-price").textContent=`£${parseFloat(t.priceRange.minVariantPrice.amount).toFixed(2)}`,this.elements.productModal.querySelector("#modal-description").innerHTML=t.descriptionHtml;const o=this.elements.productModal.querySelector("#modal-add-to-cart-btn"),a=t.variants?.edges?.[0]?.node;a?(o.dataset.variantId=a.id,o.disabled=!a.availableForSale,o.textContent=a.availableForSale?"Add to Cart":"Sold Out"):(o.disabled=!0,o.textContent="Unavailable");const l=this.elements.productModal.querySelector("#modal-main-image"),d=this.elements.productModal.querySelector("#modal-image-gallery");if(d.innerHTML="",t.images.edges.length>0){l.src=t.images.edges[0].node.url,t.images.edges.forEach(e=>{d.innerHTML+=`<img src="${e.node.url}" class="thumbnail w-16 h-16 object-cover rounded-md cursor-pointer border-2 border-transparent hover:border-violet-500">`})}else l.src=`https://placehold.co/600x600/111/FFF?text=${encodeURIComponent(t.title)}`},
 
-    if (document.getElementById('product-grid')) {
-        initHomepage();
-    }
+        // --- ANIMATIONS & HELPERS ---
+        observeScrollAnimations() { /* (Omitted for brevity - unchanged) */ const e=document.querySelectorAll(".scroll-animate:not(.visible)");if(!e.length)return;const t=new IntersectionObserver(((e,t)=>{e.forEach((e=>{e.isIntersecting&&(e.target.classList.add("visible"),t.unobserve(e.target))}))}),{threshold:.1});e.forEach((e=>{t.observe(e)}))},
+        initAnimations() {
+            if (this.elements.heroHeading) {
+                window.addEventListener('scroll', () => {
+                   const scrollY = window.scrollY;
+                   const scale = 1 + scrollY * 0.001;
+                   const opacity = 1 - Math.min(scrollY / 400, 1);
+                   this.elements.heroHeading.style.transform = `scale(${scale})`;
+                   this.elements.heroHeading.style.opacity = opacity;
+                });
+            }
+            // ** THE FIX IS HERE **
+            const canvas = this.elements.particleCanvas;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                let particles = [];
+                const particleCount = 50;
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = 1.5 * Math.random() + .5;
+                        this.speedX = 1 * Math.random() - .5;
+                        this.speedY = 1 * Math.random() - .5;
+                        this.color = `rgba(139, 92, 246, ${Math.random()})`
+                    }
+                    update() {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                    }
+                    draw() {
+                        ctx.fillStyle = this.color;
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                }
+                const initParticles = () => { for (let i = 0; i < particleCount; i++) particles.push(new Particle()); };
+                const animateParticles = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    requestAnimationFrame(animateParticles);
+                };
+                initParticles();
+                animateParticles();
+            }
+        },
+        
+        // --- EVENT BINDING ---
+        bindEvents() { /* (Omitted for brevity - unchanged) */ this.elements.productGrid.addEventListener("click",(e=>{const t=e.target.closest(".product-card");t&&this.openProductModal(t.dataset.productHandle)})),this.elements.productModal.addEventListener("click",(e=>{"close-modal-btn"===e.target.id||e.target===this.elements.productModal?this.elements.productModal.classList.add("hidden"):e.target.classList.contains("thumbnail")?this.elements.productModal.querySelector("#modal-main-image").src=e.target.src:"modal-add-to-cart-btn"===e.target.id&&(this.addToCart(e.target.dataset.variantId),this.elements.productModal.classList.add("hidden"))})),this.elements.cartButton.addEventListener("click",(()=>{this.elements.cartPanel.classList.add("open"),this.elements.cartOverlay.classList.remove("hidden")}));const e=()=>{this.elements.cartPanel.classList.remove("open"),this.elements.cartOverlay.classList.add("hidden")};this.elements.cartPanel.querySelector("#close-cart-btn").addEventListener("click",e),this.elements.cartOverlay.addEventListener("click",e),this.elements.cartItemsContainer.addEventListener("click",(e=>{const t=e.target.closest(".remove-from-cart-btn");t&&this.removeFromCart(t.dataset.lineId)})),this.elements.checkoutBtn.addEventListener("click",(()=>{this.state.cart&&this.state.cart.checkoutUrl&&(window.location.href=this.state.cart.checkoutUrl)}))},
+
+        // --- INITIALIZATION ---
+        async init() {
+            this.bindEvents();
+            this.initAnimations();
+            await this.fetchCart();
+            await this.fetchProducts();
+        }
+    };
+    
+    // Start the application
+    App.init();
 });
 </script>
 
