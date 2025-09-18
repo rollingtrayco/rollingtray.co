@@ -294,25 +294,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // =================================================================
     //   BLOG PAGE SPECIFIC LOGIC
     // =================================================================
+    const articleGrid = document.getElementById('article-grid');
     const articleModal = document.getElementById('article-modal');
 
-    // --- Run blog logic only if the article modal exists on the page ---
-    if(articleModal) {
-        const articleCards = document.querySelectorAll('.article-card');
+    // --- Run blog logic only if the article grid and modal exist on the page ---
+    if (articleGrid && articleModal) {
         const modalTitle = articleModal.querySelector('#modal-title');
         const modalContent = articleModal.querySelector('#modal-content');
         const closeModalBtn = articleModal.querySelector('#close-modal-btn');
 
         const openModal = (articleId, title) => {
             const contentTemplate = document.getElementById(`${articleId}-content`);
+            if (!contentTemplate) return;
 
-            if (contentTemplate) {
-                modalTitle.textContent = title;
-                modalContent.innerHTML = contentTemplate.innerHTML;
-                articleModal.classList.remove('hidden');
-                setTimeout(() => articleModal.classList.remove('opacity-0'), 10);
-                setTimeout(() => articleModal.querySelector('.article-modal-content').classList.remove('scale-95'), 10);
-            }
+            modalTitle.textContent = title;
+            modalContent.innerHTML = contentTemplate.innerHTML;
+            articleModal.classList.remove('hidden');
+            setTimeout(() => articleModal.classList.remove('opacity-0'), 10);
+            setTimeout(() => articleModal.querySelector('.article-modal-content').classList.remove('scale-95'), 10);
         };
 
         const closeModal = () => {
@@ -321,13 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => articleModal.classList.add('hidden'), 300);
         };
 
-        articleCards.forEach(card => {
-            card.addEventListener('click', (event) => {
-                const clickedCard = event.currentTarget;
-                const articleId = clickedCard.dataset.article;
-                const articleTitle = clickedCard.querySelector('h2').textContent;
-                openModal(articleId, articleTitle);
-            });
+        // Use event delegation on the grid container
+        articleGrid.addEventListener('click', (event) => {
+            const clickedCard = event.target.closest('.article-card');
+            if (!clickedCard) return; // Exit if the click wasn't on or inside a card
+
+            const articleId = clickedCard.dataset.article;
+            const articleTitle = clickedCard.querySelector('h2').textContent;
+            openModal(articleId, articleTitle);
         });
 
         closeModalBtn.addEventListener('click', closeModal);
@@ -338,4 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
 
