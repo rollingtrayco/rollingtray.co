@@ -1,35 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Rolling Tray Co - Premium Rolling Trays</title>
     <!-- SEO Meta Tags -->
-    <title>The Rolling Tray Co - Premium Handcrafted Rolling Trays</title>
-    <meta name="description" content="Discover premium, handcrafted hardwood rolling trays from The Rolling Tray Co. Designed in the UK for the modern connoisseur, our trays are the ultimate upgrade for your setup.">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Link to external stylesheet -->
+    <meta name="description" content="Discover The Rolling Tray Co's collection of handcrafted hardwood rolling trays. Premium materials, functional design, and timeless style for the modern connoisseur.">
+    
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "The Rolling Tray Co",
+      "url": "https://therollingtray.co",
+      "logo": "https://therollingtray.co/logo.png" 
+    }
+    </script>
 </head>
 <body class="antialiased">
 
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-lg bg-black/30">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center space-x-3">
-                <span class="text-xl font-bold tracking-wider">The Rolling Tray Co</span>
-            </a>
+            <a href="/" class="text-xl font-bold tracking-wider">The Rolling Tray Co</a>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#shop" class="hover:text-violet-400 transition-colors">Collection</a>
-                <a href="#features" class="hover:text-violet-400 transition-colors">Features</a>
-                <a href="#about" class="hover:text-violet-400 transition-colors">Our Story</a>
-                <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+                <a href="/#shop" class="hover:text-violet-400 transition-colors">Collection</a>
+                <a href="/#features" class="hover:text-violet-400 transition-colors">Features</a>
+                <a href="/blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
+                <a href="/#about" class="hover:text-violet-400 transition-colors">Our Story</a>
+                <a href="/#faq" class="hover:text-violet-400 transition-colors">FAQ</a>
             </nav>
             <button id="cart-button" class="relative">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
                 <span id="cart-count" class="absolute -top-2 -right-2 bg-violet-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
             </button>
         </div>
@@ -40,17 +49,9 @@
         <section class="hero-section text-center">
             <canvas id="particle-canvas"></canvas>
             <div class="hero-content container mx-auto px-6">
-                <div id="hero-text-container" style="will-change: transform;">
-                    <h1 id="hero-heading" class="text-5xl md:text-8xl font-black uppercase" style="will-change: transform, opacity;">
-                        <span class="gradient-text">Elevate</span> Your Ritual
-                    </h1>
-                    <p class="mt-4 max-w-lg mx-auto text-neutral-400 md:text-lg">
-                        Discover handcrafted hardwood rolling trays, designed for the modern connoisseur. Precision, elegance, and function in every piece.
-                    </p>
-                    <a href="#shop" class="mt-8 inline-block bg-white text-black font-bold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20">
-                        Explore The Collection
-                    </a>
-                </div>
+                <h1 id="hero-heading" class="text-5xl md:text-8xl font-black uppercase"><span class="gradient-text">Elevate</span> Your Ritual</h1>
+                <p class="mt-4 max-w-lg mx-auto text-neutral-400 md:text-lg">Discover handcrafted hardwood rolling trays, designed for the modern connoisseur. Precision, elegance, and function in every piece.</p>
+                <a href="#shop" class="mt-8 inline-block bg-white text-black font-bold px-8 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/20">Explore The Collection</a>
             </div>
         </section>
 
@@ -62,14 +63,41 @@
                     <p class="mt-4 max-w-2xl mx-auto text-neutral-400 scroll-animate" style="transition-delay: 100ms;">Each tray is meticulously crafted from a single piece of premium hardwood.</p>
                 </div>
                 <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                    <!-- Products will be dynamically inserted here -->
                     <div class="text-center col-span-full">Loading products...</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- From the Journal Section -->
+        <section id="journal" class="py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold scroll-animate">From The Journal</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-neutral-400 scroll-animate" style="transition-delay: 100ms;">Insights, stories, and news from our workshop.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                    <!-- Article Card 1 -->
+                    <a href="/blog.html" class="block bg-[#111] rounded-xl overflow-hidden scroll-animate product-card">
+                        <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Care+Guide" alt="Tray Care" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold">The Art of Care</h3>
+                            <p class="mt-2 text-neutral-400 text-sm">A simple guide to maintaining the beauty and longevity of your hardwood rolling tray.</p>
+                        </div>
+                    </a>
+                    <!-- Article Card 2 -->
+                    <a href="/blog.html" class="block bg-[#111] rounded-xl overflow-hidden scroll-animate product-card" style="transition-delay: 200ms;">
+                        <img src="https://placehold.co/600x400/1a1a1a/FFFFFF?text=Coming+Soon" alt="Upcoming Products" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold">From the Workshop</h3>
+                            <p class="mt-2 text-neutral-400 text-sm">An exclusive look at the new designs, materials, and custom options coming soon.</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="py-24">
+        <section id="features" class="py-24 bg-black">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl md:text-5xl font-bold scroll-animate">Designed for Distinction</h2>
@@ -78,14 +106,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                     <div class="border border-neutral-800 p-8 rounded-xl scroll-animate feature-card" style="transition-delay: 200ms;">
                         <h3 class="text-xl font-bold gradient-text">Premium Hardwoods</h3>
-                        <p class="mt-2 text-neutral-400">Sourced from sustainable forests, chosen for their durability and beautiful grain.</p>
+                        <p class="mt-2 text-neutral-400">Sourced for their durability and beautiful grain, ensuring a lifetime of service.</p>
                     </div>
                     <div class="border border-neutral-800 p-8 rounded-xl scroll-animate feature-card" style="transition-delay: 300ms;">
                         <h3 class="text-xl font-bold gradient-text">Ergonomic Design</h3>
                         <p class="mt-2 text-neutral-400">Curved edges and a smooth finish make for a comfortable and effortless experience.</p>
                     </div>
                     <div class="border border-neutral-800 p-8 rounded-xl scroll-animate feature-card" style="transition-delay: 400ms;">
-                        <h3 class="text-xl font-bold gradient-text">Functional Compartments</h3>
+                        <h3 class="text-xl font-bold gradient-text">Considered Layout</h3>
                         <p class="mt-2 text-neutral-400">Dedicated spaces for your tools and materials, keeping your ritual organized.</p>
                     </div>
                 </div>
@@ -93,74 +121,48 @@
         </section>
 
         <!-- About Section -->
-        <section id="about" class="py-24 bg-black">
+        <section id="about" class="py-24">
             <div class="container mx-auto px-6 text-center max-w-3xl">
                 <div class="scroll-animate">
                     <h2 class="text-4xl md:text-5xl font-bold">From Our Workshop to Your Hands</h2>
-                    <p class="mt-6 text-neutral-400 text-lg">The Rolling Tray Co was born from a simple idea: the tools we use should be as refined as the ritual itself. We are a small team of artisans dedicated to creating functional art. Each tray begins as a hand-selected piece of wood and is shaped, sanded, and finished with a passion for quality that you can see and feel.</p>
+                    <p class="mt-6 text-neutral-400 text-lg leading-relaxed">The Rolling Tray Co was born from a simple idea: the tools we use should be as refined as the ritual itself. We are a small team of artisans dedicated to creating functional art. Each tray begins as a hand-selected piece of wood and is shaped, sanded, and finished with a passion for quality that you can see and feel.</p>
                 </div>
             </div>
         </section>
         
-        <!-- Journal Section -->
-        <section id="journal" class="py-24">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-5xl font-bold scroll-animate">From The Journal</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-neutral-400 scroll-animate" style="transition-delay: 100ms;">Updates from the workshop and musings on the craft.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Blog Post 1 -->
-                    <a href="blog.html" class="block bg-[#111] p-6 rounded-xl scroll-animate feature-card" style="transition-delay: 200ms;">
-                        <h3 class="text-2xl font-bold gradient-text">From the Workshop: What's Next for The Rolling Tray Co</h3>
-                        <p class="mt-3 text-neutral-400">An update on our expanding wood selection, new designs, and the exciting introduction of bespoke, custom-designed trays.</p>
-                        <span class="mt-4 inline-block font-semibold text-violet-400">Read More &rarr;</span>
-                    </a>
-                    <!-- Blog Post 2 -->
-                    <a href="blog.html" class="block bg-[#111] p-6 rounded-xl scroll-animate feature-card" style="transition-delay: 300ms;">
-                        <h3 class="text-2xl font-bold gradient-text">A Guide to Caring For Your Hardwood Tray</h3>
-                        <p class="mt-3 text-neutral-400">Your tray is built to last a lifetime. Learn the simple steps to keep the wood nourished, protected, and looking its absolute best.</p>
-                        <span class="mt-4 inline-block font-semibold text-violet-400">Read More &rarr;</span>
-                    </a>
+        <!-- FAQ Section -->
+        <section id="faq" class="py-24 bg-black">
+            <div class="container mx-auto px-6 max-w-3xl">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 scroll-animate">Frequently Asked Questions</h2>
+                <div class="space-y-4 scroll-animate">
+                    <!-- FAQ Item 1 -->
+                    <details class="group bg-[#111] p-6 rounded-lg">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                            <span>Where do you deliver?</span>
+                            <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
+                        </summary>
+                        <p class="text-neutral-400 mt-4">We currently only deliver within the UK. We are working on expanding to international shipping in the near future!</p>
+                    </details>
+                    <!-- FAQ Item 2 -->
+                    <details class="group bg-[#111] p-6 rounded-lg">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                            <span>How long will my order take to arrive?</span>
+                            <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
+                        </summary>
+                        <p class="text-neutral-400 mt-4">We aim to dispatch all orders within 3 to 5 business days. We always strive to get your order to you as quickly as possible. Once dispatched, standard shipping times apply.</p>
+                    </details>
+                    <!-- FAQ Item 3 -->
+                    <details class="group bg-[#111] p-6 rounded-lg">
+                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
+                            <span>Are you releasing more designs or woods?</span>
+                             <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
+                        </summary>
+                        <p class="text-neutral-400 mt-4">Yes! We are constantly prototyping new designs and sourcing unique, beautiful hardwoods. Follow our Journal for the latest updates on new products and limited editions.</p>
+                    </details>
                 </div>
             </div>
         </section>
 
-        <!-- FAQ Section -->
-        <section id="faq" class="py-24 bg-black">
-            <div class="container mx-auto px-6 max-w-3xl">
-                <h2 class="text-center text-4xl md:text-5xl font-bold scroll-animate">Frequently Asked Questions</h2>
-                <div class="mt-12 space-y-4">
-                    <div class="faq-item bg-[#111] rounded-lg scroll-animate" style="transition-delay: 100ms;">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6">
-                            <span class="text-lg font-semibold">Where do you ship to?</span>
-                            <svg class="faq-arrow w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-neutral-400">We currently ship to the UK only. We are working on expanding to international shipping in the near future, so stay tuned!</p>
-                        </div>
-                    </div>
-                    <div class="faq-item bg-[#111] rounded-lg scroll-animate" style="transition-delay: 200ms;">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6">
-                            <span class="text-lg font-semibold">How long will my order take to arrive?</span>
-                            <svg class="faq-arrow w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-neutral-400">Each tray is finished to order. Please allow 3 to 5 business days for dispatch. We always aim to get your order out to you as quickly as possible. You'll receive a notification once it's shipped.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item bg-[#111] rounded-lg scroll-animate" style="transition-delay: 300ms;">
-                        <button class="faq-question w-full flex justify-between items-center text-left p-6">
-                            <span class="text-lg font-semibold">Are you releasing new designs or woods?</span>
-                            <svg class="faq-arrow w-5 h-5 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                        </button>
-                        <div class="faq-answer max-h-0 overflow-hidden transition-all duration-500 ease-in-out">
-                            <p class="p-6 pt-0 text-neutral-400">Yes! We are constantly experimenting with new designs and sourcing beautiful, exotic hardwoods. Follow our journey in 'The Journal' for the latest updates and sneak peeks from the workshop.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- Footer -->
@@ -175,9 +177,7 @@
         <div class="flex flex-col h-full">
             <div class="flex justify-between items-center p-6 border-b border-neutral-800">
                 <h2 class="text-2xl font-bold">Your Cart</h2>
-                <button id="close-cart-btn" class="p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
+                <button id="close-cart-btn" class="p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
             </div>
             <div id="cart-items" class="flex-grow p-6 overflow-y-auto">
                 <p class="text-neutral-500">Your cart is empty.</p>
@@ -193,31 +193,33 @@
     </div>
     <div id="cart-overlay" class="fixed inset-0 bg-black/60 z-[99] hidden"></div>
     
-    <!-- Product Detail Modal -->
-    <div id="product-modal" class="product-modal fixed inset-0 z-[101] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0">
-        <div class="product-modal-content w-full max-w-4xl max-h-[90vh] bg-[#111] rounded-2xl flex flex-col md:flex-row overflow-hidden scale-95">
-             <!-- Image Gallery -->
-            <div class="w-full md:w-1/2 p-4">
-                <img id="modal-main-image" src="" alt="Product image" class="w-full h-auto max-h-[50vh] md:max-h-full object-contain rounded-lg">
-                <div id="modal-thumbnails" class="flex gap-2 mt-3 justify-center">
-                    <!-- Thumbnails will be injected here -->
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 bg-black/80 z-[101] flex items-center justify-center p-4 hidden">
+        <div class="bg-[#111] max-w-4xl w-full max-h-[90vh] rounded-xl overflow-hidden flex flex-col md:flex-row">
+            <!-- Loading State -->
+            <div id="modal-loading-state" class="w-full p-8 text-center hidden"><p>Loading details...</p></div>
+            <!-- Content -->
+            <div id="modal-content-wrapper" class="w-full flex flex-col md:flex-row">
+                <div class="w-full md:w-1/2 p-4">
+                    <img id="modal-main-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-lg aspect-square">
+                    <div id="modal-image-gallery" class="flex gap-2 mt-2"></div>
                 </div>
-            </div>
-             <!-- Product Info -->
-            <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
-                <h2 id="modal-title" class="text-4xl font-bold">Product Title</h2>
-                <p id="modal-price" class="text-violet-400 text-2xl font-medium mt-2">£0.00</p>
-                <div id="modal-description" class="prose prose-invert mt-6 text-neutral-300">
-                    <p>Product description goes here.</p>
+                <div class="w-full md:w-1/2 p-6 flex flex-col">
+                    <div class="flex justify-between items-start">
+                        <h2 id="modal-title" class="text-3xl font-bold">Product Title</h2>
+                        <button id="close-modal-btn" class="p-2 -mr-2">&times;</button>
+                    </div>
+                    <p id="modal-price" class="text-violet-400 text-2xl font-medium my-2">£0.00</p>
+                    <div id="modal-description" class="text-neutral-400 flex-grow overflow-y-auto pr-2"></div>
+                    <button id="modal-add-to-cart-btn" class="mt-4 w-full bg-violet-600 text-white font-bold py-3 rounded-lg">Add to Cart</button>
                 </div>
-                <button id="modal-add-to-cart-btn" class="mt-auto w-full bg-violet-600 text-white font-bold py-4 rounded-lg transition-all duration-300 hover:bg-violet-700">Add to Cart</button>
             </div>
         </div>
-        <button id="close-modal-btn" class="absolute top-4 right-4 text-white p-2">&times;</button>
     </div>
+    
+    <!-- ** SCRIPT MOVED HERE FOR RELIABILITY ** -->
+    <script src="script.js"></script>
 
-    <!-- Link to external JavaScript, `defer` ensures it runs after the HTML is parsed -->
-    <script src="script.js" defer></script>
 </body>
 </html>
 
