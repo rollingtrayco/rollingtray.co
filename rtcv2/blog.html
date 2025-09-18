@@ -7,10 +7,8 @@
     <meta name="description" content="Updates from the workshop, musings on the craft, and a look at what's next for The Rolling Tray Co.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <!-- Link to SHARED stylesheet -->
+    <!-- Link to the single, shared stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <!-- Link to blog-specific stylesheet -->
-    <link rel="stylesheet" href="blog-style.css">
 </head>
 <body class="antialiased">
 
@@ -26,7 +24,7 @@
                 <a href="index.html#about" class="hover:text-violet-400 transition-colors">Our Story</a>
                 <a href="blog.html" class="hover:text-violet-400 transition-colors">The Journal</a>
             </nav>
-            <!-- Note: The cart button will require the main script.js for full functionality if it were here -->
+            <!-- Cart button can be added here, and will work with the shared script.js -->
         </div>
     </header>
 
@@ -46,7 +44,7 @@
         <!-- Article Grid -->
         <section class="pb-24">
             <div class="container mx-auto px-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <!-- Article 1 -->
                     <div class="article-card bg-[#111] rounded-xl p-8 flex flex-col cursor-pointer feature-card" data-article="workshop">
                         <h2 class="text-2xl font-bold gradient-text flex-grow">From the Workshop: What's Next for The Rolling Tray Co</h2>
@@ -126,8 +124,9 @@
         </div>
     </div>
 
-    <!-- Link to external blog JavaScript -->
-    <script src="blog.js" defer></script>
+    <!-- Link to the single, shared JavaScript file -->
+    <script src="script.js" defer></script>
 </body>
 </html>
+
 
