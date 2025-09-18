@@ -39,7 +39,6 @@
             color: #e5e5e5;
             overflow-x: hidden;
         }
-        /* ** NEW: Lock body scroll when modal is open ** */
         body.modal-open {
             overflow: hidden;
         }
@@ -107,11 +106,9 @@
         .cart-panel.open {
             transform: translateX(0);
         }
-        /* Prose styles for blog/product descriptions */
         .prose-invert h3 { color: #fff; }
         .prose-invert p, .prose-invert li { color: #d1d5db; }
         .prose-invert ul > li::before { background-color: #a78bfa; }
-        /* Notification Toast */
         .toast {
             transform: translateY(120%);
             transition: transform 0.5s ease-in-out;
@@ -233,30 +230,9 @@
             <div class="container mx-auto px-6 max-w-3xl">
                 <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 scroll-animate">Frequently Asked Questions</h2>
                 <div class="space-y-4 scroll-animate">
-                    <!-- FAQ Item 1 -->
-                    <details class="group bg-[#111] p-6 rounded-lg">
-                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
-                            <span>Where do you deliver?</span>
-                            <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
-                        </summary>
-                        <p class="text-neutral-400 mt-4">We currently only deliver within the UK. We are working on expanding to international shipping in the near future!</p>
-                    </details>
-                    <!-- FAQ Item 2 -->
-                    <details class="group bg-[#111] p-6 rounded-lg">
-                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
-                            <span>How long will my order take to arrive?</span>
-                            <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
-                        </summary>
-                        <p class="text-neutral-400 mt-4">We aim to dispatch all orders within 3 to 5 business days. We always strive to get your order to you as quickly as possible. Once dispatched, standard shipping times apply.</p>
-                    </details>
-                    <!-- FAQ Item 3 -->
-                    <details class="group bg-[#111] p-6 rounded-lg">
-                        <summary class="flex justify-between items-center font-medium cursor-pointer list-none">
-                            <span>Are you releasing more designs or woods?</span>
-                             <span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span>
-                        </summary>
-                        <p class="text-neutral-400 mt-4">Yes! We are constantly prototyping new designs and sourcing unique, beautiful hardwoods. Follow our Journal for the latest updates on new products and limited editions.</p>
-                    </details>
+                    <details class="group bg-[#111] p-6 rounded-lg"><summary class="flex justify-between items-center font-medium cursor-pointer list-none"><span>Where do you deliver?</span><span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span></summary><p class="text-neutral-400 mt-4">We currently only deliver within the UK. We are working on expanding to international shipping in the near future!</p></details>
+                    <details class="group bg-[#111] p-6 rounded-lg"><summary class="flex justify-between items-center font-medium cursor-pointer list-none"><span>How long will my order take to arrive?</span><span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span></summary><p class="text-neutral-400 mt-4">We aim to dispatch all orders within 3 to 5 business days. We always strive to get your order to you as quickly as possible. Once dispatched, standard shipping times apply.</p></details>
+                    <details class="group bg-[#111] p-6 rounded-lg"><summary class="flex justify-between items-center font-medium cursor-pointer list-none"><span>Are you releasing more designs or woods?</span><span class="transition group-open:rotate-180"><svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg></span></summary><p class="text-neutral-400 mt-4">Yes! We are constantly prototyping new designs and sourcing unique, beautiful hardwoods. Follow our Journal for the latest updates on new products and limited editions.</p></details>
                 </div>
             </div>
         </section>
@@ -268,23 +244,11 @@
                 <p class="text-neutral-400 mb-8 max-w-xl mx-auto scroll-animate" style="transition-delay: 150ms;">Have a question, a custom request, or just want to talk shop? We'd love to hear from you.</p>
                 <div id="contact-form" class="bg-[#111] p-8 rounded-lg text-left scroll-animate" style="transition-delay: 300ms;">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="contact-name" class="block text-sm font-medium text-neutral-400 mb-2">Name</label>
-                            <input type="text" id="contact-name" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                        </div>
-                        <div>
-                            <label for="contact-email" class="block text-sm font-medium text-neutral-400 mb-2">Email</label>
-                            <input type="email" id="contact-email" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                        </div>
+                        <div><label for="contact-name" class="block text-sm font-medium text-neutral-400 mb-2">Name</label><input type="text" id="contact-name" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></div>
+                        <div><label for="contact-email" class="block text-sm font-medium text-neutral-400 mb-2">Email</label><input type="email" id="contact-email" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></div>
                     </div>
-                    <div class="mb-6">
-                        <label for="contact-message" class="block text-sm font-medium text-neutral-400 mb-2">Message</label>
-                        <textarea id="contact-message" rows="4" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></textarea>
-                    </div>
-                    <a id="send-email-btn" class="w-full text-center btn-gradient text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 cursor-pointer flex items-center justify-center gap-2">
-                        <span>Send Message</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
-                    </a>
+                    <div class="mb-6"><label for="contact-message" class="block text-sm font-medium text-neutral-400 mb-2">Message</label><textarea id="contact-message" rows="4" class="w-full bg-neutral-900 border border-neutral-700 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"></textarea></div>
+                    <a id="send-email-btn" class="w-full text-center btn-gradient text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-violet-500/20 hover:shadow-violet-500/40 cursor-pointer flex items-center justify-center gap-2"><span>Send Message</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.428A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg></a>
                 </div>
             </div>
         </section>
@@ -294,14 +258,10 @@
     <!-- Footer -->
     <footer class="py-16 border-t border-neutral-900">
         <div class="container mx-auto px-6 text-center">
-             <!-- Newsletter Form -->
             <div class="max-w-md mx-auto mb-12">
                 <h3 class="text-xl font-bold mb-2">Join the Inner Circle</h3>
                 <p class="text-neutral-400 mb-4 text-sm">Be the first to know about new products, limited runs, and exclusive offers.</p>
-                <form id="newsletter-form" class="flex">
-                    <input type="email" id="newsletter-email" placeholder="Enter your email" required class="w-full bg-neutral-900 border border-neutral-700 rounded-l-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500">
-                    <button type="submit" class="bg-violet-600 text-white font-bold py-2 px-6 rounded-r-md hover:bg-violet-700 transition-colors">Subscribe</button>
-                </form>
+                <form id="newsletter-form" class="flex"><input type="email" id="newsletter-email" placeholder="Enter your email" required class="w-full bg-neutral-900 border border-neutral-700 rounded-l-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-violet-500"><button type="submit" class="bg-violet-600 text-white font-bold py-2 px-6 rounded-r-md hover:bg-violet-700 transition-colors">Subscribe</button></form>
             </div>
             <p class="text-neutral-500 text-sm">&copy; 2024 The Rolling Tray Co. All Rights Reserved.</p>
         </div>
@@ -310,38 +270,21 @@
     <!-- Cart Panel -->
     <div id="cart-panel" class="cart-panel fixed top-0 right-0 h-full w-full max-w-md bg-[#111] z-[100] shadow-2xl shadow-black">
         <div class="flex flex-col h-full">
-            <div class="flex justify-between items-center p-6 border-b border-neutral-800">
-                <h2 class="text-2xl font-bold">Your Cart</h2>
-                <button id="close-cart-btn" class="p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
-            </div>
-            <div id="cart-items" class="flex-grow p-6 overflow-y-auto">
-                <p class="text-neutral-500">Your cart is empty.</p>
-            </div>
-            <div class="p-6 border-t border-neutral-800">
-                <div class="flex justify-between items-center text-xl font-bold">
-                    <span>Subtotal</span>
-                    <span id="cart-subtotal">£0.00</span>
-                </div>
-                <button id="checkout-btn" class="mt-4 w-full bg-violet-600 text-white font-bold py-4 rounded-lg transition-all duration-300 hover:bg-violet-700 disabled:opacity-50" disabled>Proceed to Checkout</button>
-            </div>
+            <div class="flex justify-between items-center p-6 border-b border-neutral-800"><h2 class="text-2xl font-bold">Your Cart</h2><button id="close-cart-btn" class="p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>
+            <div id="cart-items" class="flex-grow p-6 overflow-y-auto"><p class="text-neutral-500">Your cart is empty.</p></div>
+            <div class="p-6 border-t border-neutral-800"><div class="flex justify-between items-center text-xl font-bold"><span>Subtotal</span><span id="cart-subtotal">£0.00</span></div><button id="checkout-btn" class="mt-4 w-full bg-violet-600 text-white font-bold py-4 rounded-lg transition-all duration-300 hover:bg-violet-700 disabled:opacity-50" disabled>Proceed to Checkout</button></div>
         </div>
     </div>
     <div id="cart-overlay" class="fixed inset-0 bg-black/60 z-[99] hidden"></div>
     
     <!-- Product Modal -->
     <div id="product-modal" class="fixed inset-0 bg-black/80 z-[101] flex items-center justify-center p-4 hidden">
-        <div class="bg-[#111] max-w-4xl w-full max-h-[90vh] rounded-xl overflow-hidden flex flex-col md:flex-row">
+        <!-- ** THE FIX IS HERE ** -->
+        <div class="bg-[#111] max-w-4xl w-full max-h-[90vh] rounded-xl overflow-y-auto md:overflow-hidden flex flex-col md:flex-row">
             <div id="modal-content-wrapper" class="w-full flex flex-col md:flex-row">
-                <div class="w-full md:w-1/2 p-4">
-                    <img id="modal-main-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-lg aspect-square">
-                    <div id="modal-image-gallery" class="flex gap-2 mt-2"></div>
-                </div>
-                <!-- ** UPDATED for Mobile Scrolling ** -->
-                <div class="w-full md:w-1/2 p-6 flex flex-col overflow-hidden">
-                    <div class="flex-shrink-0 flex justify-between items-start">
-                        <h2 id="modal-title" class="text-3xl font-bold pr-4">Product Title</h2>
-                        <button id="close-modal-btn" class="p-2 text-3xl">&times;</button>
-                    </div>
+                <div class="w-full md:w-1/2 p-4"><img id="modal-main-image" src="" alt="Product Image" class="w-full h-auto object-cover rounded-lg aspect-square"><div id="modal-image-gallery" class="flex gap-2 mt-2"></div></div>
+                <div class="w-full md:w-1/2 p-6 flex flex-col">
+                    <div class="flex-shrink-0 flex justify-between items-start"><h2 id="modal-title" class="text-3xl font-bold pr-4">Product Title</h2><button id="close-modal-btn" class="p-2 text-3xl">&times;</button></div>
                     <p id="modal-price" class="text-violet-400 text-2xl font-medium my-2 flex-shrink-0">£0.00</p>
                     <div id="modal-description" class="text-neutral-400 flex-grow overflow-y-auto pr-2 prose-invert"></div>
                     <button id="modal-add-to-cart-btn" class="mt-4 w-full bg-violet-600 text-white font-bold py-3 rounded-lg flex-shrink-0">Add to Cart</button>
@@ -351,30 +294,17 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="notification-toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hidden">
-        Notification Message
-    </div>
+    <div id="notification-toast" class="toast fixed bottom-5 right-5 bg-green-600 text-white py-3 px-6 rounded-lg shadow-lg hidden">Notification Message</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // =================================================================
-    //   APP - A single object to hold the entire application's logic
-    // =================================================================
     const App = {
-        // --- CONFIGURATION ---
         shopifyConfig: {
             domain: 'connoisseurcustoms.myshopify.com',
             storefrontAccessToken: '75774095f9799705fcc69b5a3d6b29a3',
             apiVersion: '2024-07'
         },
-
-        // --- STATE ---
-        state: {
-            cart: null,
-            products: [],
-        },
-
-        // --- DOM ELEMENTS ---
+        state: { cart: null, products: [] },
         elements: {
             productGrid: document.getElementById('product-grid'),
             productModal: document.getElementById('product-modal'),
@@ -387,39 +317,121 @@ document.addEventListener('DOMContentLoaded', () => {
             checkoutBtn: document.getElementById('checkout-btn'),
             particleCanvas: document.getElementById('particle-canvas'),
             heroHeading: document.getElementById('hero-heading'),
-            contactForm: document.getElementById('contact-form'),
             newsletterForm: document.getElementById('newsletter-form'),
             notificationToast: document.getElementById('notification-toast'),
         },
-        
-        // --- SHOPIFY API (Omitted for brevity - no changes) ---
-        async shopifyFetch({ query, variables }) { try { const e=`https://${this.shopifyConfig.domain}/api/${this.shopifyConfig.apiVersion}/graphql.json`,t=await fetch(e,{method:"POST",headers:{"Content-Type":"application/json","X-Shopify-Storefront-Access-Token":this.shopifyConfig.storefrontAccessToken},body:JSON.stringify({query:query,variables:variables})});if(!t.ok){const o=await t.text();throw new Error(`Shopify API Error: ${t.statusText} - ${o}`)}return t.json() } catch(e) { return console.error("Error in shopifyFetch:",e),{errors:[{message:e.message}]}} },
+        async shopifyFetch({ query, variables }) {
+            try {
+                const endpoint = `https://${this.shopifyConfig.domain}/api/${this.shopifyConfig.apiVersion}/graphql.json`;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': this.shopifyConfig.storefrontAccessToken },
+                    body: JSON.stringify({ query, variables }),
+                });
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`Shopify API Error: ${response.status} ${response.statusText} - ${errorBody}`);
+                }
+                return response.json();
+            } catch (error) {
+                console.error("Error in shopifyFetch:", error);
+                if (this.elements.productGrid) this.elements.productGrid.innerHTML = `<div class="col-span-full text-center text-red-400">Could not connect to the store. Please check your Shopify domain and API key.</div>`;
+                return { errors: [{ message: error.message }] };
+            }
+        },
         cartFragment: `fragment CartFragment on Cart { id checkoutUrl lines(first: 100) { edges { node { id quantity merchandise { ... on ProductVariant { id image { url } price { amount } product { title } } } } } } cost { subtotalAmount { amount } } }`,
-
-        // --- RENDERING FUNCTIONS (Omitted for brevity - no changes) ---
-        renderProducts() { if(!this.elements.productGrid)return;this.elements.productGrid.innerHTML="",this.state.products.forEach((e=>{const t=e.images?.edges?.[0]?.node?.url;this.elements.productGrid.innerHTML+=`<div class="product-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-product-handle="${e.handle}"><div class="overflow-hidden"><img loading="lazy" src="${t||"https://placehold.co/600x400/111/FFF?text=Image"}" alt="${e.title}" class="w-full h-64 object-cover"></div><div class="p-6"><h3 class="text-2xl font-bold">${e.title}</h3><p class="text-violet-400 text-xl font-medium mt-1">£${parseFloat(e.priceRange.minVariantPrice.amount).toFixed(2)}</p></div></div>`})),this.observeScrollAnimations() },
-        renderCart() { if(!this.state.cart)return;let e=0;this.elements.cartItemsContainer.innerHTML="",this.state.cart.lines?.edges?.length>0?(this.state.cart.lines.edges.forEach(({node:t})=>{e+=t.quantity,this.elements.cartItemsContainer.innerHTML+=`<div class="flex items-center gap-4 mb-4"><img src="${t.merchandise?.image?.url||""}" alt="${t.merchandise?.product?.title||"Product"}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${t.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${t.quantity}</p></div><p class="font-bold">£${parseFloat(t.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${t.id}">&times;</button></div>`}),this.elements.checkoutBtn.disabled=!1):(this.elements.cartItemsContainer.innerHTML='<p class="text-neutral-500">Your cart is empty.</p>',this.elements.checkoutBtn.disabled=!0),this.elements.cartCount.textContent=e,this.elements.cartSubtotal.textContent=`£${parseFloat(this.state.cart.cost?.subtotalAmount?.amount||0).toFixed(2)}`},
-
-        // --- DATA FETCHING & STATE MUTATIONS (Omitted for brevity - no changes) ---
-        async fetchProducts() { const e=`query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;const t=await this.shopifyFetch({query:e});t.data&&t.data.products?(this.state.products=t.data.products.edges.map((e=>e.node)),this.renderProducts()):(console.error("Failed to fetch products:",t.errors),this.elements.productGrid.innerHTML='<div class="col-span-full text-center text-red-400">Could not load products. Please check the console.</div>')},
-        async fetchCart() { const e=localStorage.getItem("shopifyCartId");if(!e)return this.createCart();const t=await this.shopifyFetch({query:`query ($cartId: ID!) { cart(id: $cartId) { ...CartFragment } } ${this.cartFragment}`,variables:{cartId:e}});t.data?.cart?this.state.cart=t.data.cart:(localStorage.removeItem("shopifyCartId"),this.createCart())},
-        async createCart() { const e=await this.shopifyFetch({query:`mutation { cartCreate { cart { ...CartFragment } } } ${this.cartFragment}`});e.data?.cartCreate?.cart&&(this.state.cart=e.data.cartCreate.cart,localStorage.setItem("shopifyCartId",this.state.cart.id))},
-        async addToCart(e) { const t=await this.shopifyFetch({query:`mutation ($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ...CartFragment } } } ${this.cartFragment}`,variables:{cartId:this.state.cart.id,lines:[{merchandiseId:e,quantity:1}]}});t.data?.cartLinesAdd?.cart&&(this.state.cart=t.data.cartLinesAdd.cart,this.renderCart())},
-        async removeFromCart(e) { const t=await this.shopifyFetch({query:`mutation ($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ...CartFragment } } } ${this.cartFragment}`,variables:{cartId:this.state.cart.id,lineIds:[e]}});t.data?.cartLinesRemove?.cart&&(this.state.cart=t.data.cartLinesRemove.cart,this.renderCart())},
-        async subscribeToNewsletter(e){const t=`\n                mutation customerCreate($input: CustomerCreateInput!) {\n                    customerCreate(input: $input) {\n                        customer { id }\n                        customerUserErrors { code field message }\n                    }\n                }`,o={input:{email:e,acceptsMarketing:!0}},s=await this.shopifyFetch({query:t,variables:o});if(s.data?.customerCreate?.customer)return this.showNotification("Thank you for subscribing!","success"),!0;{const a=s.data?.customerCreate?.customerUserErrors[0];return a&&"TAKEN"===a.code?this.showNotification("This email is already subscribed.","info"):this.showNotification("Could not subscribe. Please try again.","error"),console.error("Newsletter subscription error:",s.errors||s.data?.customerCreate?.customerUserErrors),!1}},
-
-        // --- UI LOGIC ---
-        async openProductModal(handle) { 
-            if(!handle) return;
-            document.body.classList.add('modal-open'); // ** Prevent background scroll **
+        renderProducts() {
+            if (!this.elements.productGrid) return;
+            this.elements.productGrid.innerHTML = '';
+            this.state.products.forEach(product => {
+                const imageUrl = product.images?.edges?.[0]?.node?.url;
+                this.elements.productGrid.innerHTML += `<div class="product-card bg-[#111] rounded-xl overflow-hidden scroll-animate cursor-pointer" data-product-handle="${product.handle}"><div class="overflow-hidden"><img loading="lazy" src="${imageUrl || 'https://placehold.co/600x400/111/FFF?text=Image'}" alt="${product.title}" class="w-full h-64 object-cover"></div><div class="p-6"><h3 class="text-2xl font-bold">${product.title}</h3><p class="text-violet-400 text-xl font-medium mt-1">£${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p></div></div>`;
+            });
+            this.observeScrollAnimations();
+        },
+        renderCart() {
+            if (!this.state.cart) return;
+            let totalQuantity = 0;
+            this.elements.cartItemsContainer.innerHTML = '';
+            if (this.state.cart.lines?.edges?.length > 0) {
+                this.state.cart.lines.edges.forEach(({ node }) => {
+                    totalQuantity += node.quantity;
+                    this.elements.cartItemsContainer.innerHTML += `<div class="flex items-center gap-4 mb-4"><img src="${node.merchandise?.image?.url || ''}" alt="${node.merchandise?.product?.title || 'Product'}" class="w-20 h-20 object-cover rounded-lg"><div class="flex-grow"><h4 class="font-bold">${node.merchandise?.product?.title}</h4><p class="text-neutral-400">Qty: ${node.quantity}</p></div><p class="font-bold">£${parseFloat(node.merchandise?.price?.amount).toFixed(2)}</p><button class="remove-from-cart-btn text-red-400 hover:text-red-500 p-1 text-2xl" data-line-id="${node.id}">&times;</button></div>`;
+                });
+                this.elements.checkoutBtn.disabled = false;
+            } else {
+                this.elements.cartItemsContainer.innerHTML = '<p class="text-neutral-500">Your cart is empty.</p>';
+                this.elements.checkoutBtn.disabled = true;
+            }
+            this.elements.cartCount.textContent = totalQuantity;
+            this.elements.cartSubtotal.textContent = `£${parseFloat(this.state.cart.cost?.subtotalAmount?.amount || 0).toFixed(2)}`;
+        },
+        async fetchProducts() {
+            const productsQuery = `query getProducts { products(first: 9) { edges { node { id title handle descriptionHtml priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } } } }`;
+            const response = await this.shopifyFetch({ query: productsQuery });
+            if (response.data && response.data.products) {
+                this.state.products = response.data.products.edges.map(e => e.node);
+                this.renderProducts();
+            } else {
+                console.error("Failed to fetch products:", response.errors);
+            }
+        },
+        async fetchCart() {
+            const cartId = localStorage.getItem('shopifyCartId');
+            if (!cartId) return this.createCart();
+            const response = await this.shopifyFetch({ query: `query ($cartId: ID!) { cart(id: $cartId) { ...CartFragment } } ${this.cartFragment}`, variables: { cartId } });
+            if (response.data?.cart) {
+                this.state.cart = response.data.cart;
+            } else {
+                localStorage.removeItem('shopifyCartId');
+                return this.createCart();
+            }
+        },
+        async createCart() {
+            const response = await this.shopifyFetch({ query: `mutation { cartCreate { cart { ...CartFragment } } } ${this.cartFragment}` });
+            if (response.data?.cartCreate?.cart) {
+                this.state.cart = response.data.cartCreate.cart;
+                localStorage.setItem('shopifyCartId', this.state.cart.id);
+            }
+        },
+        async addToCart(variantId) {
+            const response = await this.shopifyFetch({ query: `mutation ($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ...CartFragment } } } ${this.cartFragment}`, variables: { cartId: this.state.cart.id, lines: [{ merchandiseId: variantId, quantity: 1 }] } });
+            if (response.data?.cartLinesAdd?.cart) {
+                this.state.cart = response.data.cartLinesAdd.cart;
+                this.renderCart();
+            }
+        },
+        async removeFromCart(lineId) {
+            const response = await this.shopifyFetch({ query: `mutation ($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ...CartFragment } } } ${this.cartFragment}`, variables: { cartId: this.state.cart.id, lineIds: [lineId] } });
+            if (response.data?.cartLinesRemove?.cart) {
+                this.state.cart = response.data.cartLinesRemove.cart;
+                this.renderCart();
+            }
+        },
+        async subscribeToNewsletter(email) {
+            const mutation = `mutation customerCreate($input: CustomerCreateInput!) { customerCreate(input: $input) { customer { id } customerUserErrors { code field message } } }`;
+            const variables = { input: { email: email, acceptsMarketing: true } };
+            const response = await this.shopifyFetch({ query: mutation, variables });
+            if (response.data?.customerCreate?.customer) {
+                this.showNotification('Thank you for subscribing!', 'success');
+                return true;
+            } else {
+                const error = response.data?.customerCreate?.customerUserErrors[0];
+                this.showNotification(error && error.code === 'TAKEN' ? 'This email is already subscribed.' : 'Could not subscribe. Please try again.', error && error.code === 'TAKEN' ? 'info' : 'error');
+                return false;
+            }
+        },
+        async openProductModal(handle) {
+            if (!handle) return;
+            document.body.classList.add('modal-open');
             this.elements.productModal.classList.remove("hidden");
             const productQuery = `query getProduct($handle: String!) { product(handle: $handle) { id title descriptionHtml priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 1) { edges { node { id availableForSale } } } } }`;
-            const response = await this.shopifyFetch({query: productQuery, variables:{handle:handle}});
-            if(!response.data || !response.data.product) return;
+            const response = await this.shopifyFetch({ query: productQuery, variables: { handle: handle } });
+            if (!response.data || !response.data.product) return;
             const product = response.data.product;
             const dynamicSchema = document.getElementById("dynamic-product-schema");
-            if(dynamicSchema) dynamicSchema.remove();
-            const schemaData = {"@context":"https://schema.org","@type":"Product",name:product.title,image:product.images?.edges?.[0]?.node?.url||"",description:product.descriptionHtml.replace(/<[^>]*>?/gm,""),sku:product.variants?.edges?.[0]?.node?.id,offers:{"@type":"Offer",url:`${window.location.origin}/#${product.handle}`,priceCurrency:product.priceRange.minVariantPrice.currencyCode,price:product.priceRange.minVariantPrice.amount,availability:product.variants?.edges?.[0]?.node?.availableForSale?"https://schema.org/InStock":"https://schema.org/OutOfStock",seller:{"@type":"Organization",name:"The Rolling Tray Co"}}};
+            if (dynamicSchema) dynamicSchema.remove();
+            const schemaData = { "@context": "https://schema.org", "@type": "Product", name: product.title, image: product.images?.edges?.[0]?.node?.url || "", description: product.descriptionHtml.replace(/<[^>]*>?/gm, ""), sku: product.variants?.edges?.[0]?.node?.id, offers: { "@type": "Offer", url: `${window.location.origin}/#${product.handle}`, priceCurrency: product.priceRange.minVariantPrice.currencyCode, price: product.priceRange.minVariantPrice.amount, availability: product.variants?.edges?.[0]?.node?.availableForSale ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", seller: { "@type": "Organization", name: "The Rolling Tray Co" } } };
             const scriptEl = document.createElement("script");
             scriptEl.id = "dynamic-product-schema";
             scriptEl.type = "application/ld+json";
@@ -449,60 +461,81 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         closeProductModal() {
-            document.body.classList.remove('modal-open'); // ** Allow background scroll **
+            document.body.classList.remove('modal-open');
             this.elements.productModal.classList.add("hidden");
         },
-
-        // --- ANIMATIONS & HELPERS ---
-        observeScrollAnimations() { /* (Omitted for brevity - no changes) */ const e=document.querySelectorAll(".scroll-animate:not(.visible)");if(!e.length)return;const t=new IntersectionObserver(((e,t)=>{e.forEach((e=>{e.isIntersecting&&(e.target.classList.add("visible"),t.unobserve(e.target))}))}),{threshold:.1});e.forEach((e=>{t.observe(e)}))},
-        initAnimations() { /* (Omitted for brevity - no changes) */ if(this.elements.heroHeading){window.addEventListener("scroll",(()=>{const e=window.scrollY,t=1+e*.001,o=1-Math.min(e/400,1);this.elements.heroHeading.style.transform=`scale(${t})`,this.elements.heroHeading.style.opacity=o}))}const e=this.elements.particleCanvas;if(e){const t=e.getContext("2d");e.width=window.innerWidth,e.height=window.innerHeight;let o=[];const a=50;class s{constructor(){this.x=Math.random()*e.width,this.y=Math.random()*e.height,this.size=1.5*Math.random()+.5,this.speedX=1*Math.random()-.5,this.speedY=1*Math.random()-.5,this.color=`rgba(139, 92, 246, ${Math.random()})`}update(){this.x+=this.speedX,this.y+=this.speedY,(this.x>e.width||this.x<0)&&(this.speedX*=-1),(this.y>e.height||this.y<0)&&(this.speedY*=-1)}draw(){t.fillStyle=this.color,t.beginPath(),t.arc(this.x,this.y,this.size,0,2*Math.PI),t.fill()}}const i=()=>{for(let e=0;e<a;e++)o.push(new s)};const n=()=>{t.clearRect(0,0,e.width,e.height),o.forEach((e=>{e.update(),e.draw()})),requestAnimationFrame(n)};i(),n()}},
+        observeScrollAnimations() {
+            const scrollElements = document.querySelectorAll('.scroll-animate:not(.visible)');
+            if (!scrollElements.length) return;
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            scrollElements.forEach(el => observer.observe(el));
+        },
+        initAnimations() {
+            if (this.elements.heroHeading) {
+                window.addEventListener('scroll', () => {
+                   const scrollY = window.scrollY;
+                   const scale = 1 + scrollY * 0.001;
+                   const opacity = 1 - Math.min(scrollY / 400, 1);
+                   this.elements.heroHeading.style.transform = `scale(${scale})`;
+                   this.elements.heroHeading.style.opacity = opacity;
+                });
+            }
+            const canvas = this.elements.particleCanvas;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                let particles = [];
+                const particleCount = 50;
+                class Particle {
+                    constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = 1.5 * Math.random() + .5; this.speedX = 1 * Math.random() - .5; this.speedY = 1 * Math.random() - .5; this.color = `rgba(139, 92, 246, ${Math.random()})` }
+                    update() { this.x += this.speedX; this.y += this.speedY; if (this.x > canvas.width || this.x < 0) this.speedX *= -1; if (this.y > canvas.height || this.y < 0) this.speedY *= -1; }
+                    draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI); ctx.fill(); }
+                }
+                const initParticles = () => { for (let i = 0; i < particleCount; i++) particles.push(new Particle()); };
+                const animateParticles = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => { p.update(); p.draw(); });
+                    requestAnimationFrame(animateParticles);
+                };
+                initParticles();
+                animateParticles();
+            }
+        },
         showNotification(message, type = 'success') {
             const toast = this.elements.notificationToast;
             if (!toast) return;
-
             toast.textContent = message;
             toast.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600', 'hidden');
-
             if (type === 'error') toast.classList.add('bg-red-600');
             else if (type === 'info') toast.classList.add('bg-blue-600');
             else toast.classList.add('bg-green-600');
-            
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10); 
-
+            setTimeout(() => { toast.classList.add('show'); }, 10);
             setTimeout(() => {
                 toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.classList.add('hidden');
-                }, 500);
+                setTimeout(() => { toast.classList.add('hidden'); }, 500);
             }, 3000);
         },
-
-        // --- EVENT BINDING ---
-        bindEvents() { 
+        bindEvents() {
             this.elements.productGrid.addEventListener("click", (e => { const t = e.target.closest(".product-card"); t && this.openProductModal(t.dataset.productHandle) }));
-            this.elements.productModal.addEventListener("click", (e => { if ("close-modal-btn" === e.target.id || e.target === this.elements.productModal) this.closeProductModal() ; else if (e.target.classList.contains("thumbnail")) this.elements.productModal.querySelector("#modal-main-image").src = e.target.src; else if ("modal-add-to-cart-btn" === e.target.id) { this.addToCart(e.target.dataset.variantId); this.closeProductModal() } }));
+            this.elements.productModal.addEventListener("click", (e => { if ("close-modal-btn" === e.target.id || e.target === this.elements.productModal) this.closeProductModal(); else if (e.target.classList.contains("thumbnail")) this.elements.productModal.querySelector("#modal-main-image").src = e.target.src; else if ("modal-add-to-cart-btn" === e.target.id) { this.addToCart(e.target.dataset.variantId); this.closeProductModal() } }));
             this.elements.cartButton.addEventListener("click", (() => { this.elements.cartPanel.classList.add("open"), this.elements.cartOverlay.classList.remove("hidden") }));
             const closeCart = () => { this.elements.cartPanel.classList.remove("open"), this.elements.cartOverlay.classList.add("hidden") };
             this.elements.cartPanel.querySelector("#close-cart-btn").addEventListener("click", closeCart);
             this.elements.cartOverlay.addEventListener("click", closeCart);
             this.elements.cartItemsContainer.addEventListener("click", (e => { const t = e.target.closest(".remove-from-cart-btn"); t && this.removeFromCart(t.dataset.lineId) }));
-            this.elements.checkoutBtn.addEventListener("click", (() => { if (this.state.cart && this.state.cart.checkoutUrl) { window.location.href = this.state.cart.checkoutUrl; } else { console.error("Checkout button clicked, but checkoutUrl is not available on the cart state. This may be due to API permissions in your Shopify Headless channel."); } }));
-            
+            this.elements.checkoutBtn.addEventListener("click", (() => { if (this.state.cart && this.state.cart.checkoutUrl) { window.location.href = this.state.cart.checkoutUrl; } else { console.error("Checkout button clicked, but checkoutUrl is not available. Check Shopify domain and API permissions."); } }));
             const sendEmailBtn = document.getElementById("send-email-btn");
-            if (sendEmailBtn) {
-                sendEmailBtn.addEventListener("click", (() => {
-                    const e = document.getElementById("contact-name").value, t = document.getElementById("contact-email").value, o = document.getElementById("contact-message").value, s = `Message from ${e} via Website`, a = `mailto:website@therollingtray.co?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(o)}%0A%0AFrom:%20${e}%0AEmail:%20${t}`;
-                    window.location.href = a
-                }))
-            }
-            if (this.elements.newsletterForm) {
-                this.elements.newsletterForm.addEventListener("submit", (async e => { e.preventDefault(); const t = document.getElementById("newsletter-email"), o = t.value, s = await this.subscribeToNewsletter(o); s && (t.value = "") }))
-            }
+            if (sendEmailBtn) { sendEmailBtn.addEventListener("click", (() => { const e = document.getElementById("contact-name").value, t = document.getElementById("contact-email").value, o = document.getElementById("contact-message").value, s = `Message from ${e} via Website`, a = `mailto:website@therollingtray.co?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(o)}%0A%0AFrom:%20${e}%0AEmail:%20${t}`; window.location.href = a })) }
+            if (this.elements.newsletterForm) { this.elements.newsletterForm.addEventListener("submit", (async e => { e.preventDefault(); const t = document.getElementById("newsletter-email"), o = t.value, s = await this.subscribeToNewsletter(o); s && (t.value = "") })) }
         },
-
-        // --- INITIALIZATION ---
         async init() {
             this.bindEvents();
             this.initAnimations();
@@ -515,8 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    
-    // Start the application
     App.init();
 });
 </script>
